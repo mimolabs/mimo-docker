@@ -223,12 +223,28 @@ update_config() {
       rm $changelog
     fi
 
+    sed -i -e "s/MIMO_ADMIN_USER=USER/MIMO_ADMIN_USER=$admin_user/w $changelog" $production_config
+    if [ -s $changelog ]
+    then
+      echo "Added ${admin_user} as admin user"
+      rm $changelog
+    fi
+
     RAILS_SECRET=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
     sed -i -e "s/RAILS_SECRET_KEY=KEY/RAILS_SECRET_KEY=$RAILS_SECRET/w $changelog" $production_config
 
     if [ -s $changelog ]
     then
-      echo "Updated RAILS SECRET with token (${RAILS_SECRET})"
+      echo "Updated RAILS SECRET"
+      rm $changelog
+    fi
+
+    POSTGRES_PASS=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+    sed -i -e "s/POSTGRES_PASSWORD=PASS/POSTGRES_PASSWORD=$POSTGRES_PASS/w $changelog" $production_config
+
+    if [ -s $changelog ]
+    then
+      echo "Updated postgres password"
       rm $changelog
     fi
 
