@@ -1,18 +1,11 @@
 version: '3'
 services:
   api:
-    image: 'ohmimo/mimo-api'
-    environment:
-      - MIMO_ADMIN_USER=your-admin-email@example.com
-      - MIMO_DASHBOARD_URL=https://mimo.dashboard
-      - POSTGRES_PASSWORD=password
+    env_file:
+      - production.vars
   worker:
-    environment:
-      - POSTGRES_PASSWORD=password
+    env_file:
+      - production.vars
   dashboard:
-    environment:
-      - MIMO_API_URL=http://0.0.0.0:3030
-      - MIMO_DASHBOARD_URL=https://mimo.dashboard
-      - APP_ID=a609bc64f74b725c967b9c3944d6c9c1b2cdc40e34f744bf21c45f2697277157
-      - APP_SECRET=f63d710ad138dde5ea295fc4d6e7c3efbd2bca9ca0bc33a05679a6e761a0a8c0
-      - MIMO_TEST_URL=asdasdfasdf.com
+    env_file:
+      - production.vars
