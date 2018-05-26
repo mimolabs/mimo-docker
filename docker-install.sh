@@ -62,7 +62,7 @@ check_ports() {
 update_config() {
 
   local ok_config='no'
-  local production_config='docker-compose.prod.yml'
+  local production_config='production.vars'
   local changelog='change.log'
 
   hostname='example.com'
@@ -72,86 +72,86 @@ update_config() {
   smtp_user='token'
   smtp_pass='password'
 
-  while [[ "$ok_config" == "no" ]]
-  do
-    if [ ! -z "$hostname" ]
-    then
-      read -p "What's the domain for your MIMO installation? [$hostname]: " new_value
-      if [ ! -z "$new_value" ]
-      then
-        hostname="$new_value"
-      fi
-      if [[ ! $hostname =~ ^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$ ]]
-      then
-        echo
-        echo "[WARNING!!!] MIMO needs a valid hostname. IP addresses are not supported!"
-        echo ""
-        echo "A valid hostname should look like 'example.com' and not 'test.example.com'"
-        echo "Setting your hostname to example.com"
-        echo
-        hostname="example.com"
-      fi
-    fi
+  # while [[ "$ok_config" == "no" ]]
+  # do
+  #   if [ ! -z "$hostname" ]
+  #   then
+  #     read -p "What's the domain for your MIMO installation? [$hostname]: " new_value
+  #     if [ ! -z "$new_value" ]
+  #     then
+  #       hostname="$new_value"
+  #     fi
+  #     if [[ ! $hostname =~ ^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$ ]]
+  #     then
+  #       echo
+  #       echo "[WARNING!!!] MIMO needs a valid hostname. IP addresses are not supported!"
+  #       echo ""
+  #       echo "A valid hostname should look like 'example.com' and not 'test.example.com'"
+  #       echo "Setting your hostname to example.com"
+  #       echo
+  #       hostname="example.com"
+  #     fi
+  #   fi
 
-    if [ ! -z "$admin_user" ]
-    then
-      read -p "Enter your admin email, this will be your master login? [$admin_user]: " new_value
-      if [ ! -z "$new_value" ]
-      then
-        admin_user="$new_value"
-      fi
-      if [[ ! $admin_user =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$ ]]
-      then
-        echo
-        echo "[WARNING!!!] MIMO needs a valid email, please try again!"
-        echo
-        admin_user="user@example.com"
-      fi
-    fi
+  #   if [ ! -z "$admin_user" ]
+  #   then
+  #     read -p "Enter your admin email, this will be your master login? [$admin_user]: " new_value
+  #     if [ ! -z "$new_value" ]
+  #     then
+  #       admin_user="$new_value"
+  #     fi
+  #     if [[ ! $admin_user =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$ ]]
+  #     then
+  #       echo
+  #       echo "[WARNING!!!] MIMO needs a valid email, please try again!"
+  #       echo
+  #       admin_user="user@example.com"
+  #     fi
+  #   fi
 
-    if [ ! -z "$smtp_host" ]
-    then
-      read -p "Enter your SMTP hostname [$smtp_host]: " new_value
-      if [ ! -z "$new_value" ]
-      then
-        smtp_host="$new_value"
-      fi
-      if [ "$smtp_host" == "smtp.sendgrid.net" ]
-      then
-        smtp_port=2525
-      fi
-      if [ "$smtp_address" == "smtp.mailgun.org" ]
-      then
-        smtp_port=587
-      fi
-    fi
+  #   if [ ! -z "$smtp_host" ]
+  #   then
+  #     read -p "Enter your SMTP hostname [$smtp_host]: " new_value
+  #     if [ ! -z "$new_value" ]
+  #     then
+  #       smtp_host="$new_value"
+  #     fi
+  #     if [ "$smtp_host" == "smtp.sendgrid.net" ]
+  #     then
+  #       smtp_port=2525
+  #     fi
+  #     if [ "$smtp_address" == "smtp.mailgun.org" ]
+  #     then
+  #       smtp_port=587
+  #     fi
+  #   fi
 
-    if [ ! -z "$smtp_port" ]
-    then
-      read -p "Enter your SMTP port [$smtp_port]: " new_value
-      if [ ! -z "$new_value" ]
-      then
-        smtp_port="$new_value"
-      fi
-    fi
+  #   if [ ! -z "$smtp_port" ]
+  #   then
+  #     read -p "Enter your SMTP port [$smtp_port]: " new_value
+  #     if [ ! -z "$new_value" ]
+  #     then
+  #       smtp_port="$new_value"
+  #     fi
+  #   fi
 
-    if [ ! -z "$smtp_user" ]
-    then
-      read -p "Enter your SMTP username [$smtp_user]: " new_value
-      if [ ! -z "$new_value" ]
-      then
-        smtp_user="$new_value"
-      fi
-    fi
+  #   if [ ! -z "$smtp_user" ]
+  #   then
+  #     read -p "Enter your SMTP username [$smtp_user]: " new_value
+  #     if [ ! -z "$new_value" ]
+  #     then
+  #       smtp_user="$new_value"
+  #     fi
+  #   fi
 
-    if [ ! -z "$smtp_pass" ]
-    then
-      read -p "Enter your SMTP password [$smtp_pass]: " new_value
-      if [ ! -z "$new_value" ]
-      then
-        smtp_pass="$new_value"
-      fi
-    fi
+  #   if [ ! -z "$smtp_pass" ]
+  #   then
+  #     read -p "Enter your SMTP password [$smtp_pass]: " new_value
+  #     if [ ! -z "$new_value" ]
+  #     then
+  #       smtp_pass="$new_value"
+  #     fi
+  #   fi
 
     echo -e "\nDoes this look right?\n"
     echo "Hostname      : $hostname"
@@ -167,15 +167,73 @@ update_config() {
 
     cp $production_config $production_config.backup
 
-    sed -i -e "s/MIMO_TEST_URL=SOME_SECRET/MIMO_TEST_URL=$hostname/w $changelog" $production_config
-
+    sed -i -e "s/MIMO_DOMAIN=DOMAIN/MIMO_DOMAIN=$hostname/w $changelog" $production_config
     if [ -s $changelog ]
     then
-      echo "OK done some stuff = ${hostname}"
+      echo "Added ${hostname} as primary domain"
       rm $changelog
     fi
 
-  done
+    sed -i -e "s/MIMO_DASHBOARD_URL=URL/MIMO_DASHBOARD_URL=https:\/\/dashboard.$hostname/w $changelog" $production_config
+    if [ -s $changelog ]
+    then
+      echo "Added https://dashboard.${hostname} as dashboard url"
+      rm $changelog
+    fi
+
+    sed -i -e "s/MIMO_API_URL=URL/MIMO_API_URL=https:\/\/api.$hostname/w $changelog" $production_config
+    if [ -s $changelog ]
+    then
+      echo "Added https://api.${hostname} as API url"
+      rm $changelog
+    fi
+
+    sed -i -e "s/MIMO_SMTP_HOST=HOST/MIMO_SMTP_HOST=$smtp_host/w $changelog" $production_config
+    if [ -s $changelog ]
+    then
+      echo "Added ${smtp_host} as SMTP hostname"
+      rm $changelog
+    fi
+
+    sed -i -e "s/MIMO_SMTP_PORT=PORT/MIMO_SMTP_PORT=$smtp_port/w $changelog" $production_config
+    if [ -s $changelog ]
+    then
+      echo "Added ${smtp_port} as SMTP port"
+      rm $changelog
+    fi
+
+    sed -i -e "s/MIMO_SMTP_USER=USER/MIMO_SMTP_USER=$smtp_user/w $changelog" $production_config
+    if [ -s $changelog ]
+    then
+      echo "Added ${smtp_user} as SMTP user"
+      rm $changelog
+    fi
+
+    sed -i -e "s/MIMO_SMTP_PASS=PASS/MIMO_SMTP_PASS=$smtp_pass/w $changelog" $production_config
+    if [ -s $changelog ]
+    then
+      echo "Added ${smtp_pass} as SMTP pass"
+      rm $changelog
+    fi
+
+    sed -i -e "s/MIMO_SMTP_DOMAIN=DOMAIN/MIMO_SMTP_DOMAIN=$hostname/w $changelog" $production_config
+    if [ -s $changelog ]
+    then
+      echo "Added ${hostname} as SMTP domain"
+      rm $changelog
+    fi
+
+    RAILS_SECRET=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
+    sed -i -e "s/RAILS_SECRET_KEY=KEY/RAILS_SECRET_KEY=$RAILS_SECRET/w $changelog" $production_config
+
+    if [ -s $changelog ]
+    then
+      echo "Updated RAILS SECRET with token (${RAILS_SECRET})"
+      rm $changelog
+    fi
+
+
+  # done
 }
 
 check_root
