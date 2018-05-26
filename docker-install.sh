@@ -66,7 +66,11 @@ update_config() {
   local changelog='change.log'
 
   hostname='example.com'
-  admin_email='user@example.com'
+  admin_user='user@example.com'
+  smtp_host='smtp.example.com'
+  smtp_port=25
+  smtp_user='token'
+  smtp_pass='password'
 
   while [[ "$ok_config" == "no" ]]
   do
@@ -101,12 +105,61 @@ update_config() {
         echo
         echo "[WARNING!!!] MIMO needs a valid email, please try again!"
         echo
-        admin_user="example.com"
+        admin_user="user@example.com"
+      fi
+    fi
+
+    if [ ! -z "$smtp_host" ]
+    then
+      read -p "Enter your SMTP hostname [$smtp_host]: " new_value
+      if [ ! -z "$new_value" ]
+      then
+        smtp_host="$new_value"
+      fi
+      if [ "$smtp_host" == "smtp.sendgrid.net" ]
+      then
+        smtp_port=2525
+      fi
+      if [ "$smtp_address" == "smtp.mailgun.org" ]
+      then
+        smtp_port=587
+      fi
+    fi
+
+    if [ ! -z "$smtp_port" ]
+    then
+      read -p "Enter your SMTP port [$smtp_port]: " new_value
+      if [ ! -z "$new_value" ]
+      then
+        smtp_port="$new_value"
+      fi
+    fi
+
+    if [ ! -z "$smtp_user" ]
+    then
+      read -p "Enter your SMTP username [$smtp_user]: " new_value
+      if [ ! -z "$new_value" ]
+      then
+        smtp_user="$new_value"
+      fi
+    fi
+
+    if [ ! -z "$smtp_pass" ]
+    then
+      read -p "Enter your SMTP password [$smtp_pass]: " new_value
+      if [ ! -z "$new_value" ]
+      then
+        smtp_pass="$new_value"
       fi
     fi
 
     echo -e "\nDoes this look right?\n"
     echo "Hostname      : $hostname"
+    echo "Admin Email   : $admin_user"
+    echo "SMTP Host     : $smtp_host"
+    echo "SMTP Port     : $smtp_port"
+    echo "SMTP User     : $smtp_user"
+    echo "SMTP Password : $smtp_pass"
     echo ""
     read -p "Hit ENTER to continue. Type 'no' to try again. Ctrl+C will exit: " ok_config
 
