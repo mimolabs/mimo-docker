@@ -165,7 +165,7 @@ update_config() {
 
     echo "Writing configs to $production_config. Then we'll start the magic"
 
-    cp $production_config $production_config.backup
+    cp $production_config.orig $production_config
 
     sed -i -e "s/MIMO_DOMAIN=DOMAIN/MIMO_DOMAIN=$hostname/w $changelog" $production_config
     if [ -s $changelog ]
