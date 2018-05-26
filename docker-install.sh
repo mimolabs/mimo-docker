@@ -59,6 +59,11 @@ check_ports() {
   check_port "443"
 }
 
+find_in_file() {
+  val=`sed -n -e "s/${1}=//p" production.vars`
+  echo "$val"
+}
+
 update_config() {
 
   local ok_config='no'
@@ -72,86 +77,86 @@ update_config() {
   smtp_user='token'
   smtp_pass='password'
 
-  # while [[ "$ok_config" == "no" ]]
-  # do
-  #   if [ ! -z "$hostname" ]
-  #   then
-  #     read -p "What's the domain for your MIMO installation? [$hostname]: " new_value
-  #     if [ ! -z "$new_value" ]
-  #     then
-  #       hostname="$new_value"
-  #     fi
-  #     if [[ ! $hostname =~ ^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$ ]]
-  #     then
-  #       echo
-  #       echo "[WARNING!!!] MIMO needs a valid hostname. IP addresses are not supported!"
-  #       echo ""
-  #       echo "A valid hostname should look like 'example.com' and not 'test.example.com'"
-  #       echo "Setting your hostname to example.com"
-  #       echo
-  #       hostname="example.com"
-  #     fi
-  #   fi
+  while [[ "$ok_config" == "no" ]]
+  do
+    if [ ! -z "$hostname" ]
+    then
+      read -p "What's the domain for your MIMO installation? [$hostname]: " new_value
+      if [ ! -z "$new_value" ]
+      then
+        hostname="$new_value"
+      fi
+      if [[ ! $hostname =~ ^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$ ]]
+      then
+        echo
+        echo "[WARNING!!!] MIMO needs a valid hostname. IP addresses are not supported!"
+        echo ""
+        echo "A valid hostname should look like 'example.com' and not 'test.example.com'"
+        echo "Setting your hostname to example.com"
+        echo
+        hostname="example.com"
+      fi
+    fi
 
-  #   if [ ! -z "$admin_user" ]
-  #   then
-  #     read -p "Enter your admin email, this will be your master login? [$admin_user]: " new_value
-  #     if [ ! -z "$new_value" ]
-  #     then
-  #       admin_user="$new_value"
-  #     fi
-  #     if [[ ! $admin_user =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$ ]]
-  #     then
-  #       echo
-  #       echo "[WARNING!!!] MIMO needs a valid email, please try again!"
-  #       echo
-  #       admin_user="user@example.com"
-  #     fi
-  #   fi
+    if [ ! -z "$admin_user" ]
+    then
+      read -p "Enter your admin email, this will be your master login? [$admin_user]: " new_value
+      if [ ! -z "$new_value" ]
+      then
+        admin_user="$new_value"
+      fi
+      if [[ ! $admin_user =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$ ]]
+      then
+        echo
+        echo "[WARNING!!!] MIMO needs a valid email, please try again!"
+        echo
+        admin_user="user@example.com"
+      fi
+    fi
 
-  #   if [ ! -z "$smtp_host" ]
-  #   then
-  #     read -p "Enter your SMTP hostname [$smtp_host]: " new_value
-  #     if [ ! -z "$new_value" ]
-  #     then
-  #       smtp_host="$new_value"
-  #     fi
-  #     if [ "$smtp_host" == "smtp.sendgrid.net" ]
-  #     then
-  #       smtp_port=2525
-  #     fi
-  #     if [ "$smtp_address" == "smtp.mailgun.org" ]
-  #     then
-  #       smtp_port=587
-  #     fi
-  #   fi
+    if [ ! -z "$smtp_host" ]
+    then
+      read -p "Enter your SMTP hostname [$smtp_host]: " new_value
+      if [ ! -z "$new_value" ]
+      then
+        smtp_host="$new_value"
+      fi
+      if [ "$smtp_host" == "smtp.sendgrid.net" ]
+      then
+        smtp_port=2525
+      fi
+      if [ "$smtp_address" == "smtp.mailgun.org" ]
+      then
+        smtp_port=587
+      fi
+    fi
 
-  #   if [ ! -z "$smtp_port" ]
-  #   then
-  #     read -p "Enter your SMTP port [$smtp_port]: " new_value
-  #     if [ ! -z "$new_value" ]
-  #     then
-  #       smtp_port="$new_value"
-  #     fi
-  #   fi
+    if [ ! -z "$smtp_port" ]
+    then
+      read -p "Enter your SMTP port [$smtp_port]: " new_value
+      if [ ! -z "$new_value" ]
+      then
+        smtp_port="$new_value"
+      fi
+    fi
 
-  #   if [ ! -z "$smtp_user" ]
-  #   then
-  #     read -p "Enter your SMTP username [$smtp_user]: " new_value
-  #     if [ ! -z "$new_value" ]
-  #     then
-  #       smtp_user="$new_value"
-  #     fi
-  #   fi
+    if [ ! -z "$smtp_user" ]
+    then
+      read -p "Enter your SMTP username [$smtp_user]: " new_value
+      if [ ! -z "$new_value" ]
+      then
+        smtp_user="$new_value"
+      fi
+    fi
 
-  #   if [ ! -z "$smtp_pass" ]
-  #   then
-  #     read -p "Enter your SMTP password [$smtp_pass]: " new_value
-  #     if [ ! -z "$new_value" ]
-  #     then
-  #       smtp_pass="$new_value"
-  #     fi
-  #   fi
+    if [ ! -z "$smtp_pass" ]
+    then
+      read -p "Enter your SMTP password [$smtp_pass]: " new_value
+      if [ ! -z "$new_value" ]
+      then
+        smtp_pass="$new_value"
+      fi
+    fi
 
     echo -e "\nDoes this look right?\n"
     echo "Hostname      : $hostname"
@@ -165,7 +170,12 @@ update_config() {
 
     echo "Writing configs to $production_config. Then we'll start the magic"
 
-    cp $production_config.orig $production_config
+    postgres_pass=`find_in_file POSTGRES_PASSWORD`
+    rails_secret=`find_in_file RAILS_SECRET_KEY`
+    echo $rails_secret
+
+    # cp $production_config.orig $production_config
+    cp $production_config $production_config.backup
 
     sed -i -e "s/MIMO_DOMAIN=DOMAIN/MIMO_DOMAIN=$hostname/w $changelog" $production_config
     if [ -s $changelog ]
@@ -230,26 +240,33 @@ update_config() {
       rm $changelog
     fi
 
-    RAILS_SECRET=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
-    sed -i -e "s/RAILS_SECRET_KEY=KEY/RAILS_SECRET_KEY=$RAILS_SECRET/w $changelog" $production_config
+    if [ "$rails_secret" == "KEY" ] ; then
+      rails_secret=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
+      sed -i -e "s/RAILS_SECRET_KEY=KEY/RAILS_SECRET_KEY=$rails_secret/w $changelog" $production_config
 
-    if [ -s $changelog ]
-    then
-      echo "Updated RAILS SECRET"
-      rm $changelog
+      if [ -s $changelog ]
+      then
+        echo "Updated RAILS SECRET"
+        rm $changelog
+      fi
+    else
+      echo 'Not updating secret token'
     fi
 
-    POSTGRES_PASS=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
-    sed -i -e "s/POSTGRES_PASSWORD=PASS/POSTGRES_PASSWORD=$POSTGRES_PASS/w $changelog" $production_config
+    if [ "$postgres_pass" == "PASS" ] ; then
+      postgres_pass=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+      sed -i -e "s/POSTGRES_PASSWORD=PASS/POSTGRES_PASSWORD=$postgres_pass/w $changelog" $production_config
 
-    if [ -s $changelog ]
-    then
-      echo "Updated postgres password"
-      rm $changelog
+      if [ -s $changelog ]
+      then
+        echo "Updated postgres password"
+        rm $changelog
+      fi
+    else
+      echo 'Not updating postgres password'
     fi
 
-
-  # done
+  done
 }
 
 check_root
