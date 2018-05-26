@@ -70,12 +70,27 @@ update_config() {
   local production_config='production.vars'
   local changelog='change.log'
 
-  hostname='example.com'
-  admin_user='user@example.com'
-  smtp_host='smtp.example.com'
-  smtp_port=25
-  smtp_user='token'
-  smtp_pass='password'
+  hostname=`find_in_file MIMO_DOMAIN`
+  hostname_orig=`find_in_file MIMO_DOMAIN`
+
+  admin_user=`find_in_file MIMO_ADMIN_USER`
+  admin_user_orig=$admin_user
+
+  smtp_host=`find_in_file MIMO_SMTP_HOST`
+  smtp_host_orig=$smtp_host
+
+  smtp_port=`find_in_file MIMO_SMTP_PORT`
+  smtp_port_orig=$smtp_port
+
+  smtp_user=`find_in_file MIMO_SMTP_USER`
+  smtp_user_orig=$smtp_user
+
+  smtp_pass=`find_in_file MIMO_SMTP_PASS`
+  smtp_pass_orig=$smtp_pass
+
+  smtp_domain_orig=`find_in_file MIMO_SMTP_DOMAIN`
+  dashboard_url=`find_in_file MIMO_DASHBOARD_URL`
+  api_url=`find_in_file MIMO_API_URL`
 
   while [[ "$ok_config" == "no" ]]
   do
@@ -172,72 +187,79 @@ update_config() {
 
     postgres_pass=`find_in_file POSTGRES_PASSWORD`
     rails_secret=`find_in_file RAILS_SECRET_KEY`
-    echo $rails_secret
+    admin_user=`find_in_file MIMO_ADMIN_USER`
 
     # cp $production_config.orig $production_config
     cp $production_config $production_config.backup
 
-    sed -i -e "s/MIMO_DOMAIN=DOMAIN/MIMO_DOMAIN=$hostname/w $changelog" $production_config
+    sed -i -e "s/MIMO_DOMAIN=${hostname_orig}/MIMO_DOMAIN=$hostname/w $changelog" $production_config
     if [ -s $changelog ]
     then
       echo "Added ${hostname} as primary domain"
       rm $changelog
     fi
 
-    sed -i -e "s/MIMO_DASHBOARD_URL=URL/MIMO_DASHBOARD_URL=https:\/\/dashboard.$hostname/w $changelog" $production_config
+    echo ${dashboard_url}
+    echo ${dashboard_url}
+    echo ${dashboard_url}
+    echo ${dashboard_url}
+
+    sed -i -e "s~MIMO_DASHBOARD_URL=${dashboard_url}~MIMO_DASHBOARD_URL=https://dashboard.$hostname~w $changelog" $production_config
     if [ -s $changelog ]
     then
       echo "Added https://dashboard.${hostname} as dashboard url"
       rm $changelog
     fi
 
-    sed -i -e "s/MIMO_API_URL=URL/MIMO_API_URL=https:\/\/api.$hostname/w $changelog" $production_config
+    sed -i -e "s~MIMO_API_URL=${api_url}~MIMO_API_URL=https://api.$hostname~w $changelog" $production_config
     if [ -s $changelog ]
     then
       echo "Added https://api.${hostname} as API url"
       rm $changelog
     fi
 
-    sed -i -e "s/MIMO_SMTP_HOST=HOST/MIMO_SMTP_HOST=$smtp_host/w $changelog" $production_config
+    sed -i -e "s/MIMO_SMTP_HOST=${smtp_host_orig}/MIMO_SMTP_HOST=$smtp_host/w $changelog" $production_config
     if [ -s $changelog ]
     then
       echo "Added ${smtp_host} as SMTP hostname"
       rm $changelog
     fi
 
-    sed -i -e "s/MIMO_SMTP_PORT=PORT/MIMO_SMTP_PORT=$smtp_port/w $changelog" $production_config
+    sed -i -e "s/MIMO_SMTP_PORT=${smtp_port_orig}/MIMO_SMTP_PORT=$smtp_port/w $changelog" $production_config
     if [ -s $changelog ]
     then
       echo "Added ${smtp_port} as SMTP port"
       rm $changelog
     fi
 
-    sed -i -e "s/MIMO_SMTP_USER=USER/MIMO_SMTP_USER=$smtp_user/w $changelog" $production_config
+    sed -i -e "s/MIMO_SMTP_USER=${smtp_user_orig}/MIMO_SMTP_USER=$smtp_user/w $changelog" $production_config
     if [ -s $changelog ]
     then
       echo "Added ${smtp_user} as SMTP user"
       rm $changelog
     fi
 
-    sed -i -e "s/MIMO_SMTP_PASS=PASS/MIMO_SMTP_PASS=$smtp_pass/w $changelog" $production_config
+    sed -i -e "s/MIMO_SMTP_PASS=${smtp_pass_orig}/MIMO_SMTP_PASS=$smtp_pass/w $changelog" $production_config
     if [ -s $changelog ]
     then
       echo "Added ${smtp_pass} as SMTP pass"
       rm $changelog
     fi
 
-    sed -i -e "s/MIMO_SMTP_DOMAIN=DOMAIN/MIMO_SMTP_DOMAIN=$hostname/w $changelog" $production_config
+    sed -i -e "s/MIMO_SMTP_DOMAIN=${smtp_domain_orig}/MIMO_SMTP_DOMAIN=$hostname/w $changelog" $production_config
     if [ -s $changelog ]
     then
       echo "Added ${hostname} as SMTP domain"
       rm $changelog
     fi
 
-    sed -i -e "s/MIMO_ADMIN_USER=USER/MIMO_ADMIN_USER=$admin_user/w $changelog" $production_config
-    if [ -s $changelog ]
-    then
-      echo "Added ${admin_user} as admin user"
-      rm $changelog
+    if [ "$admin_user" == "USER" ] ; then
+      sed -i -e "s/MIMO_ADMIN_USER=USER/MIMO_ADMIN_USER=$admin_user/w $changelog" $production_config
+      if [ -s $changelog ]
+      then
+        echo "Added ${admin_user} as admin user"
+        rm $changelog
+      fi
     fi
 
     if [ "$rails_secret" == "KEY" ] ; then
@@ -266,6 +288,7 @@ update_config() {
       echo 'Not updating postgres password'
     fi
 
+    docker-compose down && docker-compose build && docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
   done
 }
 
