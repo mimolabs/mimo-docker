@@ -62,6 +62,9 @@ check_ports() {
 update_config() {
 
   local ok_config='no'
+  local production_config='docker-compose.prod.yml'
+  local changelog='change.log'
+
   hostname='example.com'
 
   while [[ "$ok_config" == "no" ]]
@@ -89,6 +92,19 @@ update_config() {
     echo "Hostname      : $hostname"
     echo ""
     read -p "Hit ENTER to continue. Type 'no' to try again. Ctrl+C will exit: " ok_config
+
+    echo "Writing configs to $production_config. Then we'll start the magic"
+
+    cp $production_config $production_config.backup
+
+    sed -i -e "s/MIMO_TEST_URL=SOME_SECRET/MIMO_TEST_URL=$hostname/w $changelog" $production_config
+
+    if [ -s $changelog ]
+    then
+      echo "OK done some stuff = ${hostname}"
+      rm $changelog
+    fi
+
   done
 }
 
