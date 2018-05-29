@@ -30,13 +30,35 @@ services:
       - MIMO_ADMIN_USER=simon@polkaspots.com
       - RAILS_LOG_TO_STDOUT=true
       - RAILS_SERVE_STATIC_FILES=true
-      - MIMO_DASHBOARD_URL=http://localhost:8080
+      - MIMO_DASHBOARD_URL=http://mimo.test:8080
+    deploy:
+      mode: replicated
+      replicas: 2
     ports:
       - "3030:3000"
     command: bash -c "bundle exec rake production:bootstrap && bundle exec rake assets:precompile && bundle exec rails s -p 3000 -b '0.0.0.0'"
     depends_on:
       - redis
       - db
+
+  worker:
+    restart: always
+    image: "ohmimo/mimo-worker"
+    environment:
+      - MIMO_DB=123123123123
+      - POSTGRES_DB=mimo-api
+      - POSTGRES_HOST=db
+      - POSTGRES_USER=mimo-api
+      - POSTGRES_PASSWORD=password
+      - RAILS_ENV=production
+      - MIMO_ADMIN_USER=simon@polkaspots.com
+      - RAILS_LOG_TO_STDOUT=true
+      - RAILS_SERVE_STATIC_FILES=true
+      - MIMO_DASHBOARD_URL=http://mimo.test:8080
+      - REDIS_HOST=redis
+    command: bash -c "bundle exec sidekiq"
+    depends_on:
+      - api
 
   dashboard:
     #restart: always
