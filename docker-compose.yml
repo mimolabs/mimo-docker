@@ -6,7 +6,6 @@ services:
     command: ["redis-server", "--appendonly", "yes"]
     hostname: redis
     volumes:
-      # - redis-data:/data
       - ./redis:/data
   db:
     image: postgres
@@ -21,16 +20,14 @@ services:
     restart: always
     image: "ohmimo/mimo-api"
     environment:
-      - MIMO_DB=123123123123
       - POSTGRES_DB=mimo-api
       - POSTGRES_HOST=db
       - POSTGRES_USER=mimo-api
       - POSTGRES_PASSWORD=password
       - RAILS_ENV=production
-      - MIMO_ADMIN_USER=simon@polkaspots.com
       - RAILS_LOG_TO_STDOUT=true
       - RAILS_SERVE_STATIC_FILES=true
-      - MIMO_DASHBOARD_URL=http://mimo.test:8080
+      - MIMO_DASHBOARD_URL=http://mimo.dashboard:8080
     deploy:
       mode: replicated
       replicas: 2
@@ -45,18 +42,15 @@ services:
     restart: always
     image: "ohmimo/mimo-worker"
     environment:
-      - MIMO_DB=123123123123
       - POSTGRES_DB=mimo-api
       - POSTGRES_HOST=db
       - POSTGRES_USER=mimo-api
       - POSTGRES_PASSWORD=password
       - RAILS_ENV=production
-      - MIMO_ADMIN_USER=simon@polkaspots.com
       - RAILS_LOG_TO_STDOUT=true
       - RAILS_SERVE_STATIC_FILES=true
-      - MIMO_DASHBOARD_URL=http://mimo.test:8080
       - REDIS_HOST=redis
-    command: bash -c "bundle exec sidekiq"
+    command: bash -c "sidekiq"
     depends_on:
       - api
 
@@ -65,12 +59,10 @@ services:
     image: "ohmimo/mimo-dashboard"
     environment:
       - MIMO_API_URL=http://0.0.0.0:3030
-      #- MIMO_API_URL=http://dcf22dac.ngrok.io
-      # - MIMO_API_URL_INT=http://api:3030
       - NODE_ENV=production
       - APP_ID=a609bc64f74b725c967b9c3944d6c9c1b2cdc40e34f744bf21c45f2697277157
       - APP_SECRET=f63d710ad138dde5ea295fc4d6e7c3efbd2bca9ca0bc33a05679a6e761a0a8c0
-      - MIMO_DASHBOARD_URL=http://localhost:8080
+      - MIMO_DASHBOARD_URL=http://mimo.dashboard:8080
     ports:
       - "8080:8080"
     depends_on:
