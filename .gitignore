@@ -20,3 +20,4 @@ mongo
 
 docker-compose.dev.yml
 dev.vars
+common.vars
