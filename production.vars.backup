@@ -1,6 +1,6 @@
 MIMO_DOMAIN=polka.com
 MIMO_DASHBOARD_URL=https://dashboard.polka.com
-MIMO_API_URL=https://api.example.com
+MIMO_API_URL=https://api.polka.com
 MIMO_SMTP_HOST=smtp.sendgrid.net
 MIMO_SMTP_PORT=2525
 MIMO_SMTP_DOMAIN=polka.com

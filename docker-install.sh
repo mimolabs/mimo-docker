@@ -24,6 +24,22 @@ check_docker () {
   fi
 }
 
+check_docker_compose () {
+  docker_path=`which docker-compose`
+  if [ -z $docker_path ]; then
+    read  -p "Docker Compose not installed. Hit enter to install or type Ctrl+C to exit"
+    curl -s -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+    chmod +x /usr/local/bin/docker-compose
+    echo `docker-compose --version`
+    echo ""
+  fi
+  docker_path=`which docker.io || which docker`
+  if [ -z $docker_path ]; then
+    echo Installing Docker failed. Exiting.
+    exit
+  fi
+}
+
 check_disk_and_memory() {
   mem_free=$(check_linux_memory)
 
@@ -199,11 +215,6 @@ update_config() {
       rm $changelog
     fi
 
-    echo ${dashboard_url}
-    echo ${dashboard_url}
-    echo ${dashboard_url}
-    echo ${dashboard_url}
-
     sed -i -e "s~MIMO_DASHBOARD_URL=${dashboard_url}~MIMO_DASHBOARD_URL=https://dashboard.$hostname~w $changelog" $production_config
     if [ -s $changelog ]
     then
@@ -288,12 +299,13 @@ update_config() {
       echo 'Not updating postgres password'
     fi
 
-    docker-compose down && docker-compose build && docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+    docker-compose down && docker-compose build && docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
   done
 }
 
 check_root
 check_docker
+check_docker_compose
 check_disk_and_memory
 check_ports
 update_config
