@@ -66,6 +66,7 @@ update_config() {
   local changelog='change.log'
 
   hostname='example.com'
+  admin_email='user@example.com'
 
   while [[ "$ok_config" == "no" ]]
   do
@@ -85,6 +86,22 @@ update_config() {
         echo "Setting your hostname to example.com"
         echo
         hostname="example.com"
+      fi
+    fi
+
+    if [ ! -z "$admin_user" ]
+    then
+      read -p "Enter your admin email, this will be your master login? [$admin_user]: " new_value
+      if [ ! -z "$new_value" ]
+      then
+        admin_user="$new_value"
+      fi
+      if [[ ! $admin_user =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$ ]]
+      then
+        echo
+        echo "[WARNING!!!] MIMO needs a valid email, please try again!"
+        echo
+        admin_user="example.com"
       fi
     fi
 

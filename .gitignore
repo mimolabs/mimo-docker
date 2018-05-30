@@ -17,3 +17,6 @@
 .byebug_history
 redis
 mongo
+
+docker-compose.dev.yml
+dev.vars
