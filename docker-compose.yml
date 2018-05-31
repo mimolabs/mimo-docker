@@ -28,9 +28,6 @@ services:
       - RAILS_LOG_TO_STDOUT=true
       - RAILS_SERVE_STATIC_FILES=true
       - MIMO_DASHBOARD_URL=http://mimo.dashboard:8080
-    deploy:
-      mode: replicated
-      replicas: 2
     ports:
       - "3030:3000"
     command: bash -c "sleep 10 && bundle exec rake production:bootstrap && bundle exec rake assets:precompile && bundle exec rails s -p 3000 -b '0.0.0.0'"
