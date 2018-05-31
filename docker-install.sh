@@ -313,18 +313,22 @@ update_config() {
     else
       docker-compose down && docker-compose build && docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --force-recreate -d
     fi
+
+    public_ip=`curl -s ifconfig.co`
+
+    echo 
+    echo
+    echo 'Successfully installed MIMO!'
+    echo '----------------------------'
+    echo "You can access the dashboard on https://dashboard.${hostname}"
+    echo 
+    echo "The API is available at https://api.${hostmame}."
+    echo "Please ensure you've updated your DNS entries. Both dashboard.${hostname} and api.${hostname} should point to ${public_ip}."
+    echo "You also need to open ports 80 and 443 on your firewall!"
+    echo 
+    echo 'You stay classy!'
   done
 
-  public_ip=`curl -s ifconfig.co`
-
-  echo 'Successfully installed MIMO.'
-  echo '----------------------------'
-  echo "You can access the dashboard on https://dashboard.${hostname}"
-  echo 
-  echo "The API is available at https://api.${hostmame}."
-  echo "Please ensure you've updated your DNS entries. Both dashboard.${hostname}"
-  echo "and api.${hostname} should point to ${public_ip}."
-  echo "You need to open ports 80 and 443 on your firewall!"
 }
 
 check_root
