@@ -139,7 +139,7 @@ update_config() {
 
     if [ ! -z "$admin_user" ]
     then
-      read -p "Enter your admin email, this will be your master login? [$admin_user]: " new_value
+      read -p "Enter your admin email, this will be your master login? [$admin_user_orig]: " new_value
       if [ ! -z "$new_value" ]
       then
         admin_user="$new_value"
