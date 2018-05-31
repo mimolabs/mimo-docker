@@ -70,6 +70,14 @@ check_port() {
   fi
 }
 
+check_config_exists() {
+  FILE='production.vars'
+  if [ ! -f $FILE ]; then
+    echo "File $FILE does not exist. Creating from defaults"
+    cp $FILE.orig $FILE
+  fi
+}
+
 check_ports() {
   check_port "80"
   check_port "443"
@@ -308,4 +316,5 @@ check_docker
 check_docker_compose
 check_disk_and_memory
 check_ports
+check_config_exists
 update_config
