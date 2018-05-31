@@ -317,12 +317,13 @@ update_config() {
     public_ip=`curl -s ifconfig.co`
 
     echo 
-    echo
     echo 'Successfully installed MIMO!'
     echo '----------------------------'
+    echo
     echo "You can access the dashboard on https://dashboard.${hostname}"
     echo 
-    echo "The API is available at https://api.${hostmame}."
+    echo "The API is available at https://api.${hostname}."
+    echo
     echo "Please ensure you've updated your DNS entries. Both dashboard.${hostname} and api.${hostname} should point to ${public_ip}."
     echo "You also need to open ports 80 and 443 on your firewall!"
     echo 
