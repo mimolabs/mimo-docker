@@ -275,13 +275,11 @@ update_config() {
       rm $changelog
     fi
 
-    if [ "$admin_user_orig" == "email@example.com" ] ; then
-      sed -i -e "s/MIMO_ADMIN_USER=${admin_user_orig}/MIMO_ADMIN_USER=$admin_user/w $changelog" $production_config
-      if [ -s $changelog ]
-      then
-        echo "Added ${admin_user} as admin user"
-        rm $changelog
-      fi
+    sed -i -e "s/MIMO_ADMIN_USER=${admin_user_orig}/MIMO_ADMIN_USER=$admin_user/w $changelog" $production_config
+    if [ -s $changelog ]
+    then
+      echo "Added ${admin_user} as admin user"
+      rm $changelog
     fi
 
     if [ "$rails_secret" == "KEY" ] ; then
