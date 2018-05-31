@@ -273,7 +273,7 @@ update_config() {
     fi
 
     if [ "$admin_user" == "USER" ] ; then
-      sed -i -e "s/MIMO_ADMIN_USER=USER/MIMO_ADMIN_USER=$admin_user/w $changelog" $production_config
+      sed -i -e "s/MIMO_ADMIN_USER=${admin_user_orig}/MIMO_ADMIN_USER=$admin_user/w $changelog" $production_config
       if [ -s $changelog ]
       then
         echo "Added ${admin_user} as admin user"
