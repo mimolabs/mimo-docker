@@ -75,7 +75,7 @@ services:
     restart: always
     image: 'ohmimo/mimo-nginx'
     ports:
-     - "8080:8080"
+     - "80:8080"
     depends_on:
       - api
     command: "nginx -g 'daemon off;'"

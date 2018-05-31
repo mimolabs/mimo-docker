@@ -324,7 +324,7 @@ update_config() {
     echo 
     echo "The API is available at https://api.${hostname}."
     echo
-    echo "Please ensure you've updated your DNS entries. Both dashboard.${hostname} and api.${hostname} should point to ${public_ip}."
+    echo "Please ensure you've updated your DNS entries. Create A-records for dashboard.${hostname} and api.${hostname} that point at ${public_ip}."
     echo "You also need to open ports 80 and 443 on your firewall!"
     echo 
     echo 'You stay classy!'
