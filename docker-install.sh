@@ -271,13 +271,7 @@ update_config() {
       rm $changelog
     fi
 
-    echo $admin_user
-    echo $admin_user
-    echo $admin_user
-    echo $admin_user
-
-    if [ "$admin_user" == "email@example.com" ] ; then
-      echo '123123123'
+    if [ "$admin_user_orig" == "email@example.com" ] ; then
       sed -i -e "s/MIMO_ADMIN_USER=${admin_user_orig}/MIMO_ADMIN_USER=$admin_user/w $changelog" $production_config
       if [ -s $changelog ]
       then
