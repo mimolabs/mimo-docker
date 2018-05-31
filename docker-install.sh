@@ -211,7 +211,6 @@ update_config() {
 
     postgres_pass=`find_in_file POSTGRES_PASSWORD`
     rails_secret=`find_in_file RAILS_SECRET_KEY`
-    admin_user=`find_in_file MIMO_ADMIN_USER`
 
     # cp $production_config.orig $production_config
     cp $production_config $production_config.backup
@@ -272,7 +271,7 @@ update_config() {
       rm $changelog
     fi
 
-    if [ "$admin_user" == "USER" ] ; then
+    if [ "$admin_user" == "email@example.com" ] ; then
       sed -i -e "s/MIMO_ADMIN_USER=${admin_user_orig}/MIMO_ADMIN_USER=$admin_user/w $changelog" $production_config
       if [ -s $changelog ]
       then
