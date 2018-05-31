@@ -22,4 +22,4 @@ docker-compose.dev.yml
 dev.vars
 common.vars
 production.vars
-production.vars.backup
+*.backup
