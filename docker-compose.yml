@@ -59,11 +59,7 @@ services:
     restart: always
     image: "ohmimo/mimo-dashboard"
     environment:
-      - MIMO_API_URL=http://0.0.0.0:3030
       - NODE_ENV=production
-      - APP_ID=a609bc64f74b725c967b9c3944d6c9c1b2cdc40e34f744bf21c45f2697277157
-      - APP_SECRET=f63d710ad138dde5ea295fc4d6e7c3efbd2bca9ca0bc33a05679a6e761a0a8c0
-      - MIMO_DASHBOARD_URL=http://mimo.dashboard:8080
     # ports:
     #   - "8082:8080"
     depends_on:

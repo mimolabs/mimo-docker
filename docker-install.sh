@@ -316,6 +316,9 @@ update_config() {
       docker-compose down && docker-compose build && docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --force-recreate -d
     fi
 
+    echo 'Sleeping for 30 seconds to allow things to settle down.'
+    sleep 30 
+
     public_ip=`curl -s ifconfig.co`
 
     echo 
@@ -328,6 +331,7 @@ update_config() {
     echo
     echo "Please ensure you've updated your DNS entries. Create A-records for dashboard.${hostname} and api.${hostname} that point at ${public_ip}."
     echo "You also need to open ports 80 and 443 on your firewall!"
+    echo
     echo 
     echo 'You stay classy!'
   done
