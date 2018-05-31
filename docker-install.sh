@@ -70,6 +70,10 @@ check_port() {
   fi
 }
 
+kill_docker() {
+  docker-compose down
+}
+
 check_config_exists() {
   FILE='production.vars'
   if [ ! -f $FILE ]; then
@@ -336,6 +340,7 @@ check_root
 check_docker
 check_docker_compose
 check_disk_and_memory
+kill_docker
 check_ports
 check_config_exists
 update_config
