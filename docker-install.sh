@@ -306,7 +306,7 @@ update_config() {
       echo 'Not updating postgres password'
     fi
 
-    docker-compose down && docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --force-recreate
+    docker-compose down && docker-compose build --pull && docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --force-recreate
   done
 }
 
