@@ -70,9 +70,9 @@ services:
     ports:
      - "80:8080"
      - "443:8443"
-    # depends_on:
-    #   - api
-    # command: "nginx -g 'daemon off;'"
+    depends_on:
+      - api
+    command: "nginx -g 'daemon off;'"
     volumes:
       - 'nginx-config:/etc/nginx/conf.d'
       - 'nginx-certs:/etc/nginx/certs'
