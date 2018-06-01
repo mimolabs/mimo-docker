@@ -1,3 +1,4 @@
+2018-04-28 16:39:24.156017+0100 0x23d9c7   Default     0x0                  97     0    opendirectoryd: Client: <private>, UID: 501, EUID: 501, GID: 20, EGID: 20
 version: '3'
 services:
   redis:
@@ -10,24 +11,15 @@ services:
   db:
     image: postgres
     restart: always
-    environment:
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_USER=mimo-api
-      - POSTGRES_DB=mimo-api
+    env_file:
+      - production.vars
     volumes:
       - ./tmp/postgres:/var/lib/postgresql/data
   api:
     restart: always
     image: "ohmimo/mimo-api"
-    environment:
-      - POSTGRES_DB=mimo-api
-      - POSTGRES_HOST=db
-      - POSTGRES_USER=mimo-api
-      - POSTGRES_PASSWORD=password
-      - RAILS_ENV=production
-      - RAILS_LOG_TO_STDOUT=true
-      - RAILS_SERVE_STATIC_FILES=true
-      - MIMO_DASHBOARD_URL=http://mimo.dashboard:8080
+    env_file:
+      - production.vars
     # ports:
     #   - "3030:3000"
     command: bash -c "sleep 10 && bundle exec rake db:create && rake db:migrate && bundle exec rake production:bootstrap && bundle exec rake assets:precompile && bundle exec puma -C /myapp/config/puma.rb"
@@ -40,12 +32,9 @@ services:
   worker:
     restart: always
     image: "ohmimo/mimo-worker"
+    env_file:
+      - production.vars
     environment:
-      - POSTGRES_DB=mimo-api
-      - POSTGRES_HOST=db
-      - POSTGRES_USER=mimo-api
-      - POSTGRES_PASSWORD=password
-      - RAILS_ENV=production
       - RAILS_LOG_TO_STDOUT=true
       - RAILS_SERVE_STATIC_FILES=true
       - REDIS_HOST=redis
@@ -58,6 +47,8 @@ services:
   dashboard:
     restart: always
     image: "ohmimo/mimo-dashboard"
+    env_file:
+      - production.vars
     environment:
       - NODE_ENV=production
     # ports:
@@ -77,4 +68,4 @@ services:
     command: "nginx -g 'daemon off;'"
 
 volumes:
-  shared-volume: 
+  shared-volume:
