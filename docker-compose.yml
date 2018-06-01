@@ -17,6 +17,7 @@ services:
   api:
     restart: always
     image: "ohmimo/mimo-api"
+    pull: Always
     env_file:
       - production.vars
     # ports:
