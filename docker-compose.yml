@@ -55,7 +55,7 @@ services:
     volumes:
         - shared-volume:/etc/mimo
 
-  web:
+  nginx:
     restart: always
     labels:
       - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
@@ -77,7 +77,7 @@ services:
     container_name: nginx-docker-gen
     restart: always
     depends_on:
-      - web
+      - nginx
     volumes:
       - 'nginx-config:/etc/nginx/conf.d'
       - 'nginx-certs:/etc/nginx/certs'
