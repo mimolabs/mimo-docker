@@ -1,4 +1,3 @@
-2018-04-28 16:39:24.156017+0100 0x23d9c7   Default     0x0                  97     0    opendirectoryd: Client: <private>, UID: 501, EUID: 501, GID: 20, EGID: 20
 version: '3'
 services:
   redis:
