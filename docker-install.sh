@@ -320,7 +320,7 @@ update_config() {
     # sleep 10 
 
     public_ip=`curl -s ifconfig.co`
-    if [ $public_ip ] ; then
+    if [ "$public_ip" ] ; then
       sed -i -e "s/PUBLIC_IP=IP/PUBLIC_IP=$public_ip/w" $production_config
     fi
 
@@ -330,11 +330,10 @@ update_config() {
     echo
     echo "You can access the dashboard on https://dashboard.${hostname}"
     echo 
-    echo "The API is available at https://api.${hostname}."
-    echo
     echo "Please ensure you've updated your DNS entries. Create A-records for dashboard.${hostname} and api.${hostname} that point at ${public_ip}."
     echo "You also need to open ports 80 and 443 on your firewall!"
     echo
+    echo "An email has been sent to ${admin_user}. The email contains a magic link that you need to complete the installation."
     echo 
     echo 'You stay classy!'
   done
