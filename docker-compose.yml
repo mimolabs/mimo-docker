@@ -50,7 +50,7 @@ services:
       - NODE_ENV=production
       - VIRTUAL_HOST=dashboard.wisp.services
       - VIRTUAL_NETWORK=nginx-proxy
-      - VIRTUAL_PORT=3000
+      - VIRTUAL_PORT=8080
       - LETSENCRYPT_HOST=dashboard.wisp.services
       - LETSENCRYPT_EMAIL=simon@polkaspots.com
       - LETSENCRYPT_TEST=true
@@ -70,8 +70,8 @@ services:
     ports:
      - "80:80"
      - "443:443"
-    depends_on:
-      - api
+    # depends_on:
+    #   - api
     command: "nginx -g 'daemon off;'"
     volumes:
       - 'nginx-config:/etc/nginx/conf.d'
@@ -83,8 +83,8 @@ services:
     build: ./docker-gen/
     container_name: nginx-docker-gen
     restart: always
-    depends_on:
-      - nginx
+    # depends_on:
+    #   - nginx
     volumes:
       - 'nginx-config:/etc/nginx/conf.d'
       - 'nginx-certs:/etc/nginx/certs'
@@ -106,8 +106,8 @@ services:
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
     environment:
       - NGINX_DOCKER_GEN_CONTAINER=nginx-docker-gen
-    depends_on:
-      - nginx-gen
+    # depends_on:
+    #   - nginx-gen
 
 volumes:
   shared-volume:
