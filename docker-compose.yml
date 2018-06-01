@@ -19,8 +19,6 @@ services:
     image: "ohmimo/mimo-api:latest"
     env_file:
       - production.vars
-    # ports:
-    #   - "3030:3000"
     command: bash -c "sleep 10 && bundle exec rake db:create && rake db:migrate && bundle exec rake production:bootstrap && bundle exec rake assets:precompile && bundle exec puma -C /myapp/config/puma.rb"
     depends_on:
       - redis
@@ -59,12 +57,55 @@ services:
 
   web:
     restart: always
-    image: 'ohmimo/mimo-nginx'
+    labels:
+      - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
+    # image: 'ohmimo/mimo-nginx'
+    image: nginx
     ports:
-     - "80:8080"
+     - "80:80"
     depends_on:
       - api
     command: "nginx -g 'daemon off;'"
+    volumes:
+      - 'nginx-config:/etc/nginx/conf.d'
+      - 'nginx-certs:/etc/nginx/certs'
+      - 'nginx-vhosts:/etc/nginx/vhost.d'
+      - 'nginx-webroot:/usr/share/nginx/html'
+
+  nginx-gen:
+    build: .
+    container_name: nginx-docker-gen
+    restart: always
+    depends_on:
+      - web
+    volumes:
+      - 'nginx-config:/etc/nginx/conf.d'
+      - 'nginx-certs:/etc/nginx/certs'
+      - 'nginx-vhosts:/etc/nginx/vhost.d'
+      - 'nginx-webroot:/usr/share/nginx/html'
+      - '/var/run/docker.sock:/tmp/docker.sock:ro'
+
+  letsencrypt-nginx-proxy-companion:
+    restart: always
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    container_name: letsencrypt-nginx-proxy-companion
+    labels:
+      - com.github.jrcs.letsencrypt_nginx_proxy_companion.docker_gen
+    volumes:
+      - 'nginx-config:/etc/nginx/conf.d'
+      - 'nginx-certs:/etc/nginx/certs'
+      - 'nginx-vhosts:/etc/nginx/vhost.d'
+      - 'nginx-webroot:/usr/share/nginx/html'
+      - '/var/run/docker.sock:/var/run/docker.sock:ro'
+    environment:
+      - NGINX_DOCKER_GEN_CONTAINER=nginx-docker-gen
+    depends_on:
+      - nginx-gen
 
 volumes:
   shared-volume:
+  nginx-config:
+  nginx-certs:
+  nginx-vhosts:
+  nginx-webroot:
+
