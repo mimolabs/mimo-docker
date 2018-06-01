@@ -321,7 +321,7 @@ update_config() {
 
     val=`find_in_file MIMO_DOMAIN`
     public_ip=`curl -s ifconfig.co`
-    sed -i -e "s/PUBLIC_IP=${val}/PUBLIC_IP=$public_ip/w" $production_config
+    sed -i -e "s/PUBLIC_IP=${val}/PUBLIC_IP=$public_ip/g" $production_config
 
     echo 
     echo 'Successfully installed MIMO!'
