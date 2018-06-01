@@ -48,6 +48,12 @@ services:
       - production.vars
     environment:
       - NODE_ENV=production
+      - VIRTUAL_HOST=dashboard.wisp.services
+      - VIRTUAL_NETWORK=nginx-proxy
+      - VIRTUAL_PORT=3000
+      - LETSENCRYPT_HOST=dashboard.wisp.services
+      - LETSENCRYPT_EMAIL=simon@polkaspots.com
+      - LETSENCRYPT_TEST=true
     # ports:
     #   - "8082:8080"
     depends_on:
