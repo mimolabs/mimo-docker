@@ -309,17 +309,20 @@ update_config() {
     fi
 
     if [ $DEBUG ] ; then
-      docker-compose down && docker-compose build && docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --force-recreate
+      docker-compose down && docker-compose pull --parallel && docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --force-recreate
     elif [ $FOREGROUND ] ; then
-      docker-compose down && docker-compose build && docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --force-recreate
+      docker-compose down && docker-compose pull --parallel && docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --force-recreate
     else
-      docker-compose down && docker-compose pull && docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --force-recreate -d
+      docker-compose down && docker-compose pull --parallel && docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --force-recreate -d
     fi
 
     echo 'Sleeping for 30 seconds to allow things to settle down.'
     # sleep 10 
 
     public_ip=`curl -s ifconfig.co`
+    if [ $public_ip ] ; then
+      sed -i -e "s/PUBLIC_IP=IP/PUBLIC_IP=$public_ip/w" $production_config
+    fi
 
     echo 
     echo 'Successfully installed MIMO!'
