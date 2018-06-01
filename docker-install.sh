@@ -320,9 +320,7 @@ update_config() {
     # sleep 10 
 
     public_ip=`curl -s ifconfig.co`
-    if [ "$public_ip" ] ; then
-      sed -i -e "s/PUBLIC_IP=IP/PUBLIC_IP=$public_ip/w" $production_config
-    fi
+    sed -i -e "s/PUBLIC_IP=IP/PUBLIC_IP=$public_ip/w" $production_config
 
     echo 
     echo 'Successfully installed MIMO!'
