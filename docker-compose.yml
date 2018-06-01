@@ -73,7 +73,7 @@ services:
       - 'nginx-webroot:/usr/share/nginx/html'
 
   nginx-gen:
-    build: .
+    build: ./docker-gen/
     container_name: nginx-docker-gen
     restart: always
     depends_on:
