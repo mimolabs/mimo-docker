@@ -342,7 +342,7 @@ check_root
 check_docker
 check_docker_compose
 check_disk_and_memory
+check_config_exists
 kill_docker
 check_ports
-check_config_exists
 update_config
