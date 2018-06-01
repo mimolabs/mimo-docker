@@ -16,8 +16,7 @@ services:
       - ./tmp/postgres:/var/lib/postgresql/data
   api:
     restart: always
-    image: "ohmimo/mimo-api"
-    pull: Always
+    image: "ohmimo/mimo-api:latest"
     env_file:
       - production.vars
     # ports:
