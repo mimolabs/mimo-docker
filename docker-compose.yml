@@ -106,6 +106,7 @@ services:
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
     environment:
       - NGINX_DOCKER_GEN_CONTAINER=nginx-docker-gen
+      - NGINX_PROXY_CONTAINER=nginx
     # depends_on:
     #   - nginx-gen
 
