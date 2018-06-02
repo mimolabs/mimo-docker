@@ -59,18 +59,18 @@ services:
       - 'nginx-vhosts:/etc/nginx/vhost.d'
       - 'nginx-webroot:/usr/share/nginx/html'
 
-  # nginx-gen:
-  #   build: ./docker-gen/
-  #   container_name: nginx-docker-gen
-  #   restart: always
-  #   volumes:
-  #     - 'nginx-config:/etc/nginx/conf.d'
-  #     - 'nginx-certs:/etc/nginx/certs'
-  #     - 'nginx-vhosts:/etc/nginx/vhost.d'
-  #     - 'nginx-webroot:/usr/share/nginx/html'
-  #     - '/var/run/docker.sock:/tmp/docker.sock:ro'
-  #   depends_on:
-  #     - nginx
+  nginx-gen:
+    build: ./docker-gen/
+    container_name: nginx-docker-gen
+    restart: always
+    volumes:
+      - 'nginx-config:/etc/nginx/conf.d'
+      - 'nginx-certs:/etc/nginx/certs'
+      - 'nginx-vhosts:/etc/nginx/vhost.d'
+      - 'nginx-webroot:/usr/share/nginx/html'
+      - '/var/run/docker.sock:/tmp/docker.sock:ro'
+    depends_on:
+      - nginx
 
   # letsencrypt-nginx-proxy-companion:
   #   restart: always
