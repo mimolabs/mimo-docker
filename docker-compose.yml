@@ -100,10 +100,10 @@ services:
     #   - production.vars
     environment:
       - NODE_ENV=production
-      - VIRTUAL_HOST=api.wisp.services
+      - VIRTUAL_HOST=admin.wisp.services
       # - VIRTUAL_NETWORK=nginx-proxy
       # - VIRTUAL_PORT=80
-      - LETSENCRYPT_HOST=api.wisp.services
+      - LETSENCRYPT_HOST=admin.wisp.services
       - LETSENCRYPT_EMAIL=simon@polkaspots.com
       # - LETSENCRYPT_TEST=true
     # ports:
