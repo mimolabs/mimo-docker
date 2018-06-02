@@ -108,8 +108,8 @@ services:
       # - LETSENCRYPT_TEST=true
     # ports:
     #   - "80:80"
-    # depends_on:
-    #   - letsencrypt-nginx-proxy-companion
+    depends_on:
+      - nginx
     volumes:
         - shared-volume:/etc/mimo
 
