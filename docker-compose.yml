@@ -93,7 +93,7 @@ services:
       - nginx-gen
 
   dashboard:
-    # restart: always
+    restart: always
     image: "ohmimo/mimo-dashboard"
     # image: "tutum/apache-php"
     env_file:
