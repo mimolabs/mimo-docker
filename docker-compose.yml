@@ -41,27 +41,6 @@ services:
   #     - api
   #     - redis
 
-  dashboard:
-    restart: always
-    # image: "ohmimo/mimo-dashboard"
-    image: "tutum/apache-php"
-    env_file:
-      - production.vars
-    environment:
-      - NODE_ENV=production
-      - VIRTUAL_HOST=dashboard.wisp.services
-      # - VIRTUAL_NETWORK=nginx-proxy
-      - VIRTUAL_PORT=8080
-      - LETSENCRYPT_HOST=dashboard.wisp.services
-      - LETSENCRYPT_EMAIL=simon@polkaspots.com
-      - LETSENCRYPT_TEST=true
-    # ports:
-    #   - "8082:8080"
-    # depends_on:
-    #   - api
-    volumes:
-        - shared-volume:/etc/mimo
-
   nginx:
     restart: always
     labels:
@@ -69,8 +48,8 @@ services:
     # image: 'ohmimo/mimo-nginx'
     image: nginx:alpine
     ports:
-     - "80:8080"
-     - "443:8443"
+     - "80:80"
+     - "443:443"
     # depends_on:
     #   - api
     command: "nginx -g 'daemon off;'"
@@ -84,8 +63,8 @@ services:
     build: ./docker-gen/
     container_name: nginx-docker-gen
     restart: always
-    # depends_on:
-    #   - nginx
+    depends_on:
+      - nginx
     volumes:
       - 'nginx-config:/etc/nginx/conf.d'
       - 'nginx-certs:/etc/nginx/certs'
@@ -110,7 +89,27 @@ services:
       - NGINX_PROXY_CONTAINER=nginx
     depends_on:
       - nginx-gen
-      - nginx
+
+  dashboard:
+    restart: always
+    # image: "ohmimo/mimo-dashboard"
+    image: "tutum/apache-php"
+    env_file:
+      - production.vars
+    environment:
+      - NODE_ENV=production
+      - VIRTUAL_HOST=dashboard.wisp.services
+      # - VIRTUAL_NETWORK=nginx-proxy
+      - VIRTUAL_PORT=8080
+      - LETSENCRYPT_HOST=dashboard.wisp.services
+      - LETSENCRYPT_EMAIL=simon@polkaspots.com
+      - LETSENCRYPT_TEST=true
+    # ports:
+    #   - "8082:8080"
+    depends_on:
+      - letsencrypt-nginx-proxy-companion
+    volumes:
+        - shared-volume:/etc/mimo
 
 volumes:
   shared-volume:
