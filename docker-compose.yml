@@ -46,7 +46,7 @@ services:
     labels:
       - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
     # image: 'ohmimo/mimo-nginx'
-    image: nginx:alpine
+    image: nginx #:alpine
     ports:
      - "80:80"
      - "443:443"
@@ -63,32 +63,32 @@ services:
     build: ./docker-gen/
     container_name: nginx-docker-gen
     restart: always
-    depends_on:
-      - nginx
     volumes:
       - 'nginx-config:/etc/nginx/conf.d'
       - 'nginx-certs:/etc/nginx/certs'
       - 'nginx-vhosts:/etc/nginx/vhost.d'
       - 'nginx-webroot:/usr/share/nginx/html'
       - '/var/run/docker.sock:/tmp/docker.sock:ro'
-
-  letsencrypt-nginx-proxy-companion:
-    restart: always
-    image: jrcs/letsencrypt-nginx-proxy-companion
-    container_name: letsencrypt-nginx-proxy-companion
-    # labels:
-    #   - com.github.jrcs.letsencrypt_nginx_proxy_companion.docker_gen
-    volumes:
-      - 'nginx-config:/etc/nginx/conf.d'
-      - 'nginx-certs:/etc/nginx/certs'
-      - 'nginx-vhosts:/etc/nginx/vhost.d'
-      - 'nginx-webroot:/usr/share/nginx/html'
-      - '/var/run/docker.sock:/var/run/docker.sock:ro'
-    environment:
-      - NGINX_DOCKER_GEN_CONTAINER=nginx-docker-gen
-      - NGINX_PROXY_CONTAINER=nginx
     depends_on:
-      - nginx-gen
+      - nginx
+
+  # letsencrypt-nginx-proxy-companion:
+  #   restart: always
+  #   image: jrcs/letsencrypt-nginx-proxy-companion
+  #   container_name: letsencrypt-nginx-proxy-companion
+  #   # labels:
+  #   #   - com.github.jrcs.letsencrypt_nginx_proxy_companion.docker_gen
+  #   volumes:
+  #     - 'nginx-config:/etc/nginx/conf.d'
+  #     - 'nginx-certs:/etc/nginx/certs'
+  #     - 'nginx-vhosts:/etc/nginx/vhost.d'
+  #     - 'nginx-webroot:/usr/share/nginx/html'
+  #     - '/var/run/docker.sock:/var/run/docker.sock:ro'
+  #   environment:
+  #     - NGINX_DOCKER_GEN_CONTAINER=nginx-docker-gen
+  #     - NGINX_PROXY_CONTAINER=nginx
+  #   depends_on:
+  #     - nginx-gen
 
   dashboard:
     # restart: always
