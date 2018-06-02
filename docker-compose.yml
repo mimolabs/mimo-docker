@@ -52,7 +52,7 @@ services:
      - "443:443"
     # depends_on:
     #   - api
-    command: "nginx -g 'daemon off;'"
+    # command: "nginx -g 'daemon off;'"
     volumes:
       - 'nginx-config:/etc/nginx/conf.d'
       - 'nginx-certs:/etc/nginx/certs'
@@ -76,8 +76,8 @@ services:
     restart: always
     image: jrcs/letsencrypt-nginx-proxy-companion
     container_name: letsencrypt-nginx-proxy-companion
-    labels:
-      - com.github.jrcs.letsencrypt_nginx_proxy_companion.docker_gen
+    # labels:
+    #   - com.github.jrcs.letsencrypt_nginx_proxy_companion.docker_gen
     volumes:
       - 'nginx-config:/etc/nginx/conf.d'
       - 'nginx-certs:/etc/nginx/certs'
@@ -91,11 +91,11 @@ services:
       - nginx-gen
 
   dashboard:
-    restart: always
+    # restart: always
     # image: "ohmimo/mimo-dashboard"
     image: "tutum/apache-php"
-    env_file:
-      - production.vars
+    # env_file:
+    #   - production.vars
     environment:
       - NODE_ENV=production
       - VIRTUAL_HOST=dashboard.wisp.services
