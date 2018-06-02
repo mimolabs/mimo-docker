@@ -98,7 +98,7 @@ services:
     #   - production.vars
     environment:
       - NODE_ENV=production
-      - VIRTUAL_HOST=api.wisp.services
+      - VIRTUAL_HOST=wisp.services,api.wisp.services
       # - VIRTUAL_NETWORK=nginx-proxy
       # - VIRTUAL_PORT=8080
       - LETSENCRYPT_HOST=api.wisp.services
