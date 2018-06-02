@@ -52,7 +52,7 @@ services:
      - "443:8443"
     # depends_on:
     #   - api
-    # command: "nginx -g 'daemon off;'"
+    command: "nginx -g 'daemon off;'"
     volumes:
       - 'nginx-config:/etc/nginx/conf.d'
       - 'nginx-certs:/etc/nginx/certs'
@@ -106,8 +106,6 @@ services:
       - LETSENCRYPT_HOST=dashboard.wisp.services
       - LETSENCRYPT_EMAIL=simon@polkaspots.com
       # - LETSENCRYPT_TEST=true
-    # ports:
-    #   - "80:80"
     depends_on:
       - nginx
     volumes:
