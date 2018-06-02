@@ -43,7 +43,8 @@ services:
 
   dashboard:
     restart: always
-    image: "ohmimo/mimo-dashboard"
+    # image: "ohmimo/mimo-dashboard"
+    image: "tutum/apache-php"
     env_file:
       - production.vars
     environment:
@@ -107,9 +108,9 @@ services:
     environment:
       - NGINX_DOCKER_GEN_CONTAINER=nginx-docker-gen
       - NGINX_PROXY_CONTAINER=nginx
-    depends_on:
-      - nginx-gen
-      - nginx
+    # depends_on:
+    #   - nginx-gen
+    #   - nginx
 
 volumes:
   shared-volume:
