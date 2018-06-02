@@ -111,6 +111,11 @@ services:
     volumes:
         - shared-volume:/etc/mimo
 
+networks:
+  default:
+    external:
+      name: nginx-proxy
+
 volumes:
   shared-volume:
   nginx-config:
