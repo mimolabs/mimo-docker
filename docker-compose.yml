@@ -106,8 +106,8 @@ services:
       - LETSENCRYPT_HOST=dashboard.wisp.services
       - LETSENCRYPT_EMAIL=simon@polkaspots.com
       # - LETSENCRYPT_TEST=true
-    depends_on:
-      - nginx
+    # depends_on:
+    #   - web
     volumes:
         - shared-volume:/etc/mimo
 
