@@ -57,8 +57,8 @@ services:
       - LETSENCRYPT_TEST=true
     # ports:
     #   - "8082:8080"
-    depends_on:
-      - api
+    # depends_on:
+    #   - api
     volumes:
         - shared-volume:/etc/mimo
 
@@ -66,8 +66,8 @@ services:
     restart: always
     labels:
       - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
-    image: 'ohmimo/mimo-nginx'
-    #image: nginx:alpine
+    # image: 'ohmimo/mimo-nginx'
+    image: nginx:alpine
     ports:
      - "80:8080"
      - "443:8443"
