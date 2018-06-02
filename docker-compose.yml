@@ -41,7 +41,7 @@ services:
   #     - api
   #     - redis
 
-  nginx:
+  web:
     restart: always
     # container_name: nginx
     # labels:
