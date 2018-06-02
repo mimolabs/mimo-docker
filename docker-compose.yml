@@ -52,12 +52,12 @@ services:
      - "443:8443"
     # depends_on:
     #   - api
-    command: "nginx -g 'daemon off;'"
     volumes:
       - 'nginx-config:/etc/nginx/conf.d'
       - 'nginx-certs:/etc/nginx/certs'
       - 'nginx-vhosts:/etc/nginx/vhost.d'
       - 'nginx-webroot:/usr/share/nginx/html'
+    command: "nginx -g 'daemon off;'"
 
   nginx-gen:
     build: ./docker-gen/
