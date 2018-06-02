@@ -72,6 +72,7 @@ services:
     depends_on:
       - nginx
     command: -notify-sighup nginx -watch -wait 5s:30s /etc/docker-gen/templates/nginx.tmpl /etc/nginx/conf.d/default.conf
+    entrypoint: ["/bin/sh", "-c"]
 
   letsencrypt-nginx-proxy-companion:
     restart: always
