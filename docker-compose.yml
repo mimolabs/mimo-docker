@@ -46,8 +46,8 @@ services:
     container_name: nginx
     labels:
       - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
-    # image: 'ohmimo/mimo-nginx'
-    image: nginx #:alpine
+    image: 'ohmimo/mimo-nginx'
+    # image: nginx #:alpine
     ports:
      - "80:80"
      - "443:443"
