@@ -15,27 +15,26 @@ services:
     volumes:
       - ./tmp/postgres:/var/lib/postgresql/data
 
-  # worker:
-  #   restart: always
-  #   image: "ohmimo/mimo-worker"
-  #   env_file:
-  #     - production.vars
-  #   environment:
-  #     - RAILS_LOG_TO_STDOUT=true
-  #     - RAILS_SERVE_STATIC_FILES=true
-  #     - REDIS_HOST=redis
-  #   command: bash -c "sidekiq"
-  #   depends_on:
-  #     - db
-  #     - api
-  #     - redis
+  worker:
+    restart: always
+    image: "ohmimo/mimo-worker"
+    env_file:
+      - production.vars
+    environment:
+      - RAILS_LOG_TO_STDOUT=true
+      - RAILS_SERVE_STATIC_FILES=true
+      - REDIS_HOST=redis
+    command: bash -c "sidekiq"
+    depends_on:
+      - db
+      - api
+      - redis
 
   nginx:
     restart: always
-    container_name: nginx
+    container_name: nginx:alpine
     labels:
       - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
-    # image: 'ohmimo/mimo-nginx'
     image: 'nginx'
     ports:
      - "80:80"
@@ -47,7 +46,6 @@ services:
       - 'nginx-certs:/etc/nginx/certs'
       - 'nginx-vhosts:/etc/nginx/vhost.d'
       - 'nginx-webroot:/usr/share/nginx/html'
-    # command: "nginx -g 'daemon off;'"
 
   nginx-gen:
     build: ./docker-gen/
@@ -64,7 +62,6 @@ services:
     depends_on:
       - nginx
     command: -notify-sighup nginx -watch -wait 5s:30s /etc/docker-gen/templates/nginx.tmpl /etc/nginx/conf.d/default.conf
-    # entrypoint: ["/bin/sh", "-c"]
 
   letsencrypt-nginx-proxy-companion:
     restart: always
@@ -102,27 +99,18 @@ services:
   dashboard:
     restart: always
     image: "ohmimo/mimo-dashboard"
-    # image: "tutum/apache-php"
     env_file:
       - production.vars
     environment:
       - NODE_ENV=production
       - VIRTUAL_HOST=dashboard.wisp.services
-      # - VIRTUAL_NETWORK=nginx-proxy
-      # - VIRTUAL_PORT=8080
       - LETSENCRYPT_HOST=dashboard.wisp.services
       - LETSENCRYPT_EMAIL=simon@polkaspots.com
       - LETSENCRYPT_TEST=true
-      # - LETSENCRYPT_TEST=false
     # depends_on:
     #   - web
     volumes:
         - shared-volume:/etc/mimo
-
-# networks:
-#   default:
-#     external:
-#       name: nginx-proxy
 
 volumes:
   shared-volume:
@@ -130,4 +118,3 @@ volumes:
   nginx-certs:
   nginx-vhosts:
   nginx-webroot:
-
