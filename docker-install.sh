@@ -358,7 +358,15 @@ update_config() {
       docker-compose down && docker-compose pull --parallel && docker-compose up --force-recreate -d
     fi
 
-    echo 'Sleeping for 30 seconds to allow things to settle down.'
+    echo 'Sleeping to allow things to settle down.'
+    for i in {1..10}; do 
+      response=$(curl --write-out %{http_code} --silent --output /dev/null api.$hostname)
+      if [ "${response}" = 301 ] ; then
+        break
+      fi
+      sleep 5
+    done
+
     # sleep 10 
 
     echo 
