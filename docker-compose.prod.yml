@@ -1,13 +1,9 @@
 version: '3'
 services:
   api:
-    environment:
-      - VIRTUAL_HOST=api.wisp.services,admin.wisp.services
-      - LETSENCRYPT_HOST=api.wisp.services,admin.wisp.services
-      - LETSENCRYPT_EMAIL=simon@polkaspots.com
-      - LETSENCRYPT_TEST=true
     env_file:
       - production.vars
+      - api.vars
   worker:
     env_file:
       - production.vars
