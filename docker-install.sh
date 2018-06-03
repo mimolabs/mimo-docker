@@ -319,14 +319,6 @@ update_config() {
       echo 'Not updating postgres password'
     fi
 
-    if [ $DEBUG ] ; then
-      docker-compose down && docker-compose pull --parallel && docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --force-recreate
-    elif [ $FOREGROUND ] ; then
-      docker-compose down && docker-compose pull --parallel && docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --force-recreate
-    else
-      docker-compose down && docker-compose pull --parallel && docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --force-recreate -d
-    fi
-
     echo -n "" > api.vars
     echo "VIRTUAL_HOST=api.${hostname},admin.${hostname}" >> api.vars
 
@@ -345,7 +337,19 @@ update_config() {
     ip=`check_dns "dashboard.${hostname}"`
     echo ${ip}
 
+    if [ "${ip}" != "${public_ip}" ] ; then 
+      echo "Your dashboard.${hostname} does not resolve to this host. Please update your DNS records before continuing."
+      exit 1
+    fi
+
     sed -i -e "s/PUBLIC_IP=${val}/PUBLIC_IP=$public_ip/g" $production_config
+    if [ $DEBUG ] ; then
+      docker-compose down && docker-compose pull --parallel && docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --force-recreate
+    elif [ $FOREGROUND ] ; then
+      docker-compose down && docker-compose pull --parallel && docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --force-recreate
+    else
+      docker-compose down && docker-compose pull --parallel && docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --force-recreate -d
+    fi
 
     echo 
     echo 'Successfully installed MIMO!'
