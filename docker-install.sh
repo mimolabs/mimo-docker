@@ -328,9 +328,6 @@ update_config() {
       echo "LETSENCRYPT_TEST=true" >> api.vars
     fi
 
-    echo 'Sleeping for 30 seconds to allow things to settle down.'
-    # sleep 10 
-
     val=`find_in_file MIMO_DOMAIN`
     public_ip=`curl -s ifconfig.co`
 
@@ -354,12 +351,15 @@ update_config() {
     sed -i -e "s/PUBLIC_IP=${val}/PUBLIC_IP=$public_ip/g" $production_config
 
     if [ $DEBUG ] ; then
-      docker-compose down && docker-compose pull --parallel && docker-compose --force-recreate
+      docker-compose down && docker-compose pull --parallel && docker-compose up --force-recreate
     elif [ $FOREGROUND ] ; then
-      docker-compose down && docker-compose pull --parallel && docker-compose --force-recreate
+      docker-compose down && docker-compose pull --parallel && docker-compose up --force-recreate
     else
-      docker-compose down && docker-compose pull --parallel && docker-compose --force-recreate -d
+      docker-compose down && docker-compose pull --parallel && docker-compose up --force-recreate -d
     fi
+
+    echo 'Sleeping for 30 seconds to allow things to settle down.'
+    # sleep 10 
 
     echo 
     echo 'Successfully installed MIMO!'
