@@ -35,7 +35,8 @@ services:
     container_name: nginx
     labels:
       - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
-    image: 'ohmimo/mimo-nginx'
+    # image: 'ohmimo/mimo-nginx'
+    image: 'nginx'
     ports:
      - "80:8080"
      - "443:8443"
@@ -107,7 +108,7 @@ services:
       - NODE_ENV=production
       # - VIRTUAL_HOST=dashboard.wisp.services
       # - VIRTUAL_NETWORK=nginx-proxy
-      # - VIRTUAL_PORT=8080
+      - VIRTUAL_PORT=8080
       - LETSENCRYPT_HOST=admin.wisp.services
       - LETSENCRYPT_EMAIL=simon@polkaspots.com
       - LETSENCRYPT_TEST=true
