@@ -343,7 +343,7 @@ update_config() {
     public_ip=`curl -s ifconfig.co`
 
     ip=`check_dns "dashboard.${hostname}"`
-    echo ip
+    echo ${ip}
 
     sed -i -e "s/PUBLIC_IP=${val}/PUBLIC_IP=$public_ip/g" $production_config
 
