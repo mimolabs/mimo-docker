@@ -351,23 +351,24 @@ update_config() {
     sed -i -e "s/PUBLIC_IP=${val}/PUBLIC_IP=$public_ip/g" $production_config
 
     if [ $DEBUG ] ; then
-      docker-compose down && docker-compose pull --parallel && docker-compose up --force-recreate
+      docker-compose down && docker-compose pull && docker-compose up --force-recreate
     elif [ $FOREGROUND ] ; then
-      docker-compose down && docker-compose pull --parallel && docker-compose up --force-recreate
+      docker-compose down && docker-compose pull && docker-compose up --force-recreate
     else
-      docker-compose down && docker-compose pull --parallel && docker-compose up --force-recreate -d
+      docker-compose down && docker-compose pull && docker-compose up --force-recreate -d
     fi
 
     echo 'Sleeping to allow things to settle down.'
     for i in {1..10}; do 
       response=$(curl --write-out %{http_code} --silent --output /dev/null api.$hostname)
+      echo $response
       if [ "${response}" == 301 ] ; then
+        echo "api.$hostname resolves ok, looking fine today."
         break
       fi
+      echo "Sleeping....."
       sleep 5
     done
-
-    # sleep 10 
 
     echo 
     echo 'Successfully installed MIMO!'
