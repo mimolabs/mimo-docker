@@ -339,21 +339,26 @@ update_config() {
     if [ "${ip}" != "${public_ip}" ] ; then 
       echo "dashboard.${hostname} does not resolve to this host. Please update your DNS records before continuing."
       exit 1
+    else
+      echo "dashboard.${hostname} resolves to $ip. OK!"
     fi
 
     ip=`check_dns "api.${hostname}"`
     if [ "${ip}" != "${public_ip}" ] ; then 
       echo "api.${hostname} does not resolve to this host. Please update your DNS records before continuing."
       exit 1
+    else
+      echo "api.${hostname} resolves to $ip. OK!"
     fi
 
     sed -i -e "s/PUBLIC_IP=${val}/PUBLIC_IP=$public_ip/g" $production_config
+
     if [ $DEBUG ] ; then
-      docker-compose down && docker-compose pull --parallel && docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --force-recreate
+      docker-compose down && docker-compose pull --parallel && docker-compose -f docker-compose.yml --force-recreate
     elif [ $FOREGROUND ] ; then
-      docker-compose down && docker-compose pull --parallel && docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --force-recreate
+      docker-compose down && docker-compose pull --parallel && docker-compose -f docker-compose.yml --force-recreate
     else
-      docker-compose down && docker-compose pull --parallel && docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --force-recreate -d
+      docker-compose down && docker-compose pull --parallel && docker-compose -f docker-compose.yml --force-recreate -d
     fi
 
     echo 
