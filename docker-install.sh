@@ -382,7 +382,6 @@ check_docker
 check_docker_compose
 check_disk_and_memory
 check_config_exists
-check_dns_resolves
 kill_docker
 check_ports
 update_config
