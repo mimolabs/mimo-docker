@@ -354,11 +354,11 @@ update_config() {
     sed -i -e "s/PUBLIC_IP=${val}/PUBLIC_IP=$public_ip/g" $production_config
 
     if [ $DEBUG ] ; then
-      docker-compose down && docker-compose pull --parallel && docker-compose -f docker-compose.yml --force-recreate
+      docker-compose down && docker-compose pull --parallel && docker-compose --force-recreate
     elif [ $FOREGROUND ] ; then
-      docker-compose down && docker-compose pull --parallel && docker-compose -f docker-compose.yml --force-recreate
+      docker-compose down && docker-compose pull --parallel && docker-compose --force-recreate
     else
-      docker-compose down && docker-compose pull --parallel && docker-compose -f docker-compose.yml --force-recreate -d
+      docker-compose down && docker-compose pull --parallel && docker-compose --force-recreate -d
     fi
 
     echo 
