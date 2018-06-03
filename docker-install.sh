@@ -40,8 +40,8 @@ check_docker_compose () {
   fi
 }
 
-check_dns_resolves() {
-  dns=`getent hosts dashboard.wisp.services | awk '{ print $1 }'`
+check_dns() {
+  dns=`getent hosts ${1} | awk '{ print $1 }'`
   echo $dns
 }
 
@@ -327,7 +327,7 @@ update_config() {
       docker-compose down && docker-compose pull --parallel && docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --force-recreate -d
     fi
 
-    echo "" > api.vars
+    echo -n "" > api.vars
     echo "VIRTUAL_HOST=api.${hostname},admin.${hostname}" >> api.vars
 
     if [ $letsencrypt_email ] ; then
@@ -341,6 +341,10 @@ update_config() {
 
     val=`find_in_file MIMO_DOMAIN`
     public_ip=`curl -s ifconfig.co`
+
+    ip=`check_dns "dashboard.${hostname}"`
+    echo ip
+
     sed -i -e "s/PUBLIC_IP=${val}/PUBLIC_IP=$public_ip/g" $production_config
 
     echo 
