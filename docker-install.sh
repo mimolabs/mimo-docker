@@ -360,7 +360,7 @@ update_config() {
 
     echo 'Sleeping to allow things to settle down.'
     for i in {1..10}; do 
-      response=$(curl --write-out %{http_code} --silent --output /dev/null api.$hostname)
+      response=$(curl --write-out %{http_code} --silent --output /dev/null apiiasdkfj.$hostname)
       echo $response
       if [ "${response}" == 301 ] ; then
         echo "api.$hostname resolves ok, looking fine today."
