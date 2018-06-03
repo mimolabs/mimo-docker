@@ -367,7 +367,7 @@ update_config() {
         break
       fi
       echo $response
-      echo i
+      echo $i
       echo "Sleeping....."
       sleep 5
     done
