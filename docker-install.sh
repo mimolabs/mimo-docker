@@ -335,10 +335,15 @@ update_config() {
     public_ip=`curl -s ifconfig.co`
 
     ip=`check_dns "dashboard.${hostname}"`
-    echo ${ip}
 
     if [ "${ip}" != "${public_ip}" ] ; then 
-      echo "Your dashboard.${hostname} does not resolve to this host. Please update your DNS records before continuing."
+      echo "dashboard.${hostname} does not resolve to this host. Please update your DNS records before continuing."
+      exit 1
+    fi
+
+    ip=`check_dns "api.${hostname}"`
+    if [ "${ip}" != "${public_ip}" ] ; then 
+      echo "api.${hostname} does not resolve to this host. Please update your DNS records before continuing."
       exit 1
     fi
 
