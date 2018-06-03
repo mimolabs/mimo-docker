@@ -90,7 +90,7 @@ services:
       - production.vars
     environment:
       - VIRTUAL_HOST=api.wisp.services,admin.wisp.services
-      - LETSENCRYPT_HOST=api.wisp.services,api.wisp.services
+      - LETSENCRYPT_HOST=api.wisp.services,admin.wisp.services
       - LETSENCRYPT_EMAIL=simon@polkaspots.com
       - LETSENCRYPT_TEST=true
     command: bash -c "sleep 10 && bundle exec rake db:create && rake db:migrate && bundle exec rake production:bootstrap && bundle exec rake assets:precompile && bundle exec puma -C /myapp/config/puma.rb"
