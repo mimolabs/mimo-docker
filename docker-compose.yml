@@ -111,7 +111,7 @@ services:
       # - VIRTUAL_PORT=8080
       - LETSENCRYPT_HOST=dashboard.wisp.services
       - LETSENCRYPT_EMAIL=simon@polkaspots.com
-      - LETSENCRYPT_TEST=true
+      - LETSENCRYPT_TEST=false
     # depends_on:
     #   - web
     volumes:
