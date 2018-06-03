@@ -360,12 +360,13 @@ update_config() {
 
     echo 'Sleeping to allow things to settle down.'
     for i in {1..10}; do 
-      response=$(curl --write-out %{http_code} --silent --output /dev/null apiiasdkfj.$hostname)
+      response=$(curl --write-out %{http_code} --silent --output /dev/null api.$hostname/api/v1/ping.json)
       echo $response
-      if [ "${response}" == 301 ] ; then
+      if [ "${response}" == 200 ] ; then
         echo "api.$hostname resolves ok, looking fine today."
         break
       fi
+      echo $response
       echo "Sleeping....."
       sleep 5
     done
