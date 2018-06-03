@@ -40,6 +40,11 @@ check_docker_compose () {
   fi
 }
 
+check_dns_resolves() {
+  dns=`getent hosts dashboard.wisp.services | awk '{ print $1 }'`
+  echo $dns
+}
+
 check_disk_and_memory() {
   mem_free=$(check_linux_memory)
 
@@ -344,6 +349,7 @@ check_docker
 check_docker_compose
 check_disk_and_memory
 check_config_exists
+check_dns_resolves
 kill_docker
 check_ports
 update_config
