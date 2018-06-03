@@ -32,7 +32,7 @@ services:
 
   nginx:
     restart: always
-    container_name: nginx:alpine
+    container_name: "nginx:alpine"
     labels:
       - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
     image: 'nginx'
