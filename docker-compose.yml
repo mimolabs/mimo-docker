@@ -38,8 +38,8 @@ services:
     # image: 'ohmimo/mimo-nginx'
     image: 'nginx'
     ports:
-     - "80:8080"
-     - "443:8443"
+     - "80:80"
+     - "443:443"
     # depends_on:
     #   - db
     volumes:
