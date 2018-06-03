@@ -85,6 +85,12 @@ check_config_exists() {
     echo "File $FILE does not exist. Creating from defaults"
     cp $FILE.orig $FILE
   fi
+
+  FILE='api.vars'
+  if [ ! -f $FILE ]; then
+    echo "File $FILE does not exist. Creating from defaults"
+    cp $FILE.orig $FILE
+  fi
 }
 
 check_ports() {
