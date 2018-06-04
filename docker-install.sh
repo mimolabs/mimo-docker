@@ -353,7 +353,6 @@ update_config() {
     echo 'Sleeping to allow things to settle down.'
     for i in {1..12}; do 
       response=$(curl --write-out %{http_code} -k --silent --output /dev/null https://api.$hostname/api/v1/ping.json)
-      echo $response
       if [ "${response}" == 200 ] ; then
         echo "api.$hostname resolves ok, looking fine today."
         break
@@ -365,6 +364,7 @@ update_config() {
         echo 
         exit 1
       fi
+      sleep 5
     done
 
     echo 
@@ -373,9 +373,6 @@ update_config() {
     echo
     echo "You can access the dashboard on https://dashboard.${hostname}"
     echo 
-    echo "Please ensure you've updated your DNS entries. Create A-records for dashboard.${hostname} and api.${hostname} that point at ${public_ip}."
-    echo "You also need to open ports 80 and 443 on your firewall!"
-    echo
     echo "An email has been sent to ${admin_user}. The email contains a magic link that you need to complete the installation."
     echo 
     echo 'You stay classy!'
