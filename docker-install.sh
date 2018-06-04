@@ -356,7 +356,7 @@ update_config() {
     echo "VIRTUAL_HOST=api.${hostname},admin.${hostname}" >> api.vars
     echo "VIRTUAL_HOST=dashboard.${hostname}" >> dashboard.vars
 
-    if [ -z $letsencrypt_email ] ; then
+    if [ $letsencrypt_email ] ; then
       echo 7129387129837192837198273918237
       echo 7129387129837192837198273918237
       echo 7129387129837192837198273918237
@@ -374,9 +374,9 @@ update_config() {
       fi
     fi
 
-    if [ -z $DEBUG ] ; then
+    if [ $DEBUG ] ; then
       docker-compose pull && docker-compose up --force-recreate -d
-    elif [ -z $FOREGROUND ] ; then
+    elif [ $FOREGROUND ] ; then
       docker-compose pull && docker-compose up --force-recreate
     else
       docker-compose pull && docker-compose up --force-recreate -d
