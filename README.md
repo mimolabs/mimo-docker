@@ -21,7 +21,7 @@ MIMO will NOT work without a domain name - you cannot use MIMO with an IP.
 
 If you don't have a domain name, there's a gazillion places online for you to get one from. We recommend Namecheap.
 
-## Update your DNS records
+## DNS records
 
 Find the public IP address for your newly created server. This needs to be the publicly available IP address.
 
@@ -42,6 +42,10 @@ For example, if your public IP address is 1.2.3.4 and your chosen domain is wisp
 Make sure these resolve *before* you start the installation.
 
 We recommend using Cloudflare for your DNS however it's up to you who you chose. If you're using Cloudflare, you will need to disable their firewall before the installation. You can reactivate this afterwards.
+
+## Firewall
+
+Ports 80 and 443 must be allowed - update your firewall settings to ensure these are open and accessible.
 
 ## Login to your server
 
