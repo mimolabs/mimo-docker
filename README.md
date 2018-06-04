@@ -32,12 +32,12 @@ Add the following A-records to your DNR records:
 - dashboard
 - splash
 
-For example, if your public IP address is 80.90.10.10 and your chosen domain is wisp.services you need the following records:
+For example, if your public IP address is 1.2.3.4 and your chosen domain is wisp.services you need the following records:
 
-- api.wisp.services - 80.90.10.10
-- admin.wisp.services - 80.90.10.10
-- dashboard.wisp.services - 80.90.10.10
-- splash.wisp.services - 80.90.10.10
+- api.wisp.services - 1.2.3.4
+- admin.wisp.services - 1.2.3.4
+- dashboard.wisp.services - 1.2.3.4
+- splash.wisp.services - 1.2.3.4
 
 Make sure these resolve *before* you start the installation.
 
