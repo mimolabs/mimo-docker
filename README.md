@@ -19,7 +19,7 @@ Instructions for each provider to follow...
 
 MIMO will NOT work without a domain name - you cannot use MIMO with an IP. 
 
-If you don't have a domain name, there's a gazillion places online for you to get one from. We recommend Namecheap.
+If you don't have a domain name, there's a gazillion places online for you to get one from. We recommend [Namecheap](https://namecheap.pxf.io/c/1248558/386170/5618)
 
 If you do have a domain name, all you need to do is add the records below to your DNS.
 
