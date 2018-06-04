@@ -378,7 +378,8 @@ update_config() {
       docker-compose pull && docker-compose up --force-recreate -d
     fi
 
-    echo -e "\e[38;2;240;143;104mStarting MIMO.....\e[0m"
+    echo
+    echo -e "\e[38;2;240;143;104mStarting MIMO. Please wait while the installation completes...\e[0m"
     for i in {1..20}; do 
       response=$(curl --write-out %{http_code} -k --silent --output /dev/null https://api.$hostname/api/v1/ping.json)
       if [ "${response}" == 200 ] ; then
