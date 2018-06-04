@@ -410,7 +410,7 @@ update_config() {
 }
 
 echo
-echo -e "Welcome to the \e[91mMIMO! Community Edition\e[0m. Let's get started."
+echo -e "\e[38;5;42mWelcome to the \e[91mMIMO! Community Edition\e[0m. \e[38;5;42mLet's get started.\e[0m"
 echo
 
 check_root
