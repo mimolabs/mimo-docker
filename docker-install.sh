@@ -213,20 +213,31 @@ update_config() {
 
     if [ ! -z "$smtp_pass" ]
     then
-      read -p "Enter your SMTP password [$smtp_pass]: " new_value
+      read -p "enter your smtp password [$smtp_pass]: " new_value
       if [ ! -z "$new_value" ]
       then
         smtp_pass="$new_value"
       fi
     fi
 
+    if [ ! -z "$letencrypt_email" ]
+    then
+      echo "MIMO requires SSL to function correctly. Please enter an email so we can generate your SSL certificates."
+      read -p "enter your let's encrypt email [$admin_user]: " new_value
+      if [ ! -z "$new_value" ]
+      then
+        letsencrypt_email="$new_value"
+      fi
+    fi
+
     echo -e "\nDoes this look right?\n"
-    echo "Hostname      : $hostname"
-    echo "Admin Email   : $admin_user"
-    echo "SMTP Host     : $smtp_host"
-    echo "SMTP Port     : $smtp_port"
-    echo "SMTP User     : $smtp_user"
-    echo "SMTP Password : $smtp_pass"
+    echo "Hostname            : $hostname"
+    echo "Admin Email         : $admin_user"
+    echo "SMTP Host           : $smtp_host"
+    echo "SMTP Port           : $smtp_port"
+    echo "SMTP User           : $smtp_user"
+    echo "SMTP Password       : $smtp_pass"
+    echo "Let's Encrypt Email : $smtp_pass"
     echo ""
     read -p "Hit ENTER to continue. Type 'no' to try again. Ctrl+C will exit: " ok_config
 
@@ -341,7 +352,7 @@ update_config() {
 
     if [ -s $letsencrypt_email ] ; then
       echo "LETSENCRYPT_HOST=api.${hostname},admin.${hostname}" >> api.vars
-      echo "LETSENCRYPT_EMAIl=${letencryptemail}" >> api.vars
+      echo "LETSENCRYPT_EMAIl=${letencrypt_email}" >> api.vars
       echo "LETSENCRYPT_TEST=true" >> api.vars
     fi
 
@@ -350,7 +361,7 @@ update_config() {
 
     if [ -s $letsencrypt_email ] ; then
       echo "LETSENCRYPT_HOST=dashboard.${hostname}" >> dashboard.vars
-      echo "LETSENCRYPT_EMAIl=${letencryptemail}" >> dashboard.vars
+      echo "LETSENCRYPT_EMAIl=${letencrypt_email}" >> dashboard.vars
       echo "LETSENCRYPT_TEST=true" >> dashboard.vars
     fi
 
