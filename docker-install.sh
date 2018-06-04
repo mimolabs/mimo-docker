@@ -223,7 +223,7 @@ update_config() {
       fi
     fi
 
-    if [ ! -z "$letencrypt_email" ]
+    if [ ! -z "$letsencrypt_email" ]
     then
       # echo "MIMO requires SSL to function correctly. Please enter an email so we can generate your SSL certificates."
       read -p "enter your let's encrypt email [$letsencrypt_email_orig]: " new_value
