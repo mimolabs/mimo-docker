@@ -19,7 +19,7 @@ Instructions for each provider to follow...
 
 MIMO will NOT work without a domain name - you cannot use MIMO with an IP. 
 
-If you don't have a domain name, there's a gazillion places online for you to get one from. We recommend namecheap.
+If you don't have a domain name, there's a gazillion places online for you to get one from. We recommend Namecheap.
 
 ## Update your DNS records
 
@@ -40,6 +40,8 @@ For example, if your public IP address is 1.2.3.4 and your chosen domain is wisp
 - splash.wisp.services - 1.2.3.4
 
 Make sure these resolve *before* you start the installation.
+
+We recommend using Cloudflare for your DNS however it's up to you who you chose. If you're using Cloudflare, you will need to disable their firewall before the installation. You can reactivate this afterwards.
 
 ## Login to your server
 
