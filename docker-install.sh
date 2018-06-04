@@ -340,13 +340,13 @@ update_config() {
 
     ip=`check_dns "dashboard.${hostname}"`
     if [ "${ip}" != "${public_ip}" ] ; then 
-      echo "\e[1[ERROR]\e dashboard.${hostname} does not resolve to this host. Please update your DNS records before continuing."
+      echo "\e[91m[ERROR] dashboard.${hostname} does not resolve to this host. Please update your DNS records before continuing.\e[0m"
       exit 1
     fi
 
     ip=`check_dns "api.${hostname}"`
     if [ "${ip}" != "${public_ip}" ] ; then 
-      echo "\e[1[ERROR]\e api.${hostname} does not resolve to this host. Please update your DNS records before continuing."
+      echo "\e[91m[ERROR] api.${hostname} does not resolve to this host. Please update your DNS records before continuing.\e[0m"
       exit 1
     fi
 
@@ -367,7 +367,7 @@ update_config() {
         rm $changelog
       fi
     else
-      echo "\e[1[ERROR]\e You must set an email for let's encrypt! Otherwise we cannot secure your installation...."
+      echo "\e[91m[ERROR] You must set an email for let's encrypt! Otherwise we cannot secure your installation....\e[0m"
     fi
 
     if [ $DEBUG ] ; then
@@ -378,14 +378,14 @@ update_config() {
       docker-compose pull && docker-compose up --force-recreate -d
     fi
 
-    echo 'Starting services, please wait - this might take a few seconds.'
-    for i in {1..21}; do 
+    echo -e "\e[38;5;42mStarting services, please wait - this might take a few seconds.\e[0m"
+    for i in {1..20}; do 
       response=$(curl --write-out %{http_code} -k --silent --output /dev/null https://api.$hostname/api/v1/ping.json)
       if [ "${response}" == 200 ] ; then
         break
       fi
       if [ $i == 20 ] ; then 
-        echo "\e[1[ERROR]\e MIMO did not complete successfully."
+        echo -e "\e[91m[ERROR] MIMO did not complete successfully.\e[0m"
         echo 
         echo "Run ./docker-logs.sh for more information and try again."
         echo 
@@ -395,7 +395,7 @@ update_config() {
     done
 
     echo 
-    echo '[SUCCESS] MIMO is up and running!'
+    echo -e "\e[38;5;42m[SUCCESS] MIMO is up and running!\e[0m"
     echo '----------------------------'
     echo
     echo "You can access the dashboard on https://dashboard.${hostname}"
