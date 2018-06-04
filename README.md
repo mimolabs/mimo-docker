@@ -15,6 +15,12 @@
 
 Instructions for each provider to follow...
 
+## Domain Name
+
+MIMO will NOT work without a domain name - you cannot use MIMO with an IP. 
+
+If you don't have a domain name, there's a gazillion places online for you to get one from. We recommend namecheap.
+
 ## Update your DNS records
 
 Find the public IP address for your newly created server. This needs to be the publicly available IP address.
