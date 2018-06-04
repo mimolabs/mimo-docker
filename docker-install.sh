@@ -357,6 +357,11 @@ update_config() {
     echo "VIRTUAL_HOST=dashboard.${hostname}" >> dashboard.vars
 
     if [ -s $letsencrypt_email ] ; then
+      echo 7129387129837192837198273918237
+      echo 7129387129837192837198273918237
+      echo 7129387129837192837198273918237
+      echo 7129387129837192837198273918237
+      echo 7129387129837192837198273918237
       echo "LETSENCRYPT_HOST=api.${hostname},admin.${hostname}" >> api.vars
       echo "LETSENCRYPT_HOST=dashboard.${hostname}" >> dashboard.vars
       echo "LETSENCRYPT_TEST=true" >> api.vars
@@ -378,19 +383,19 @@ update_config() {
     fi
 
     echo 'Starting API and dashboard, please wait.'
-    for i in {1..12}; do 
+    for i in {1..21}; do 
       response=$(curl --write-out %{http_code} -k --silent --output /dev/null https://api.$hostname/api/v1/ping.json)
       if [ "${response}" == 200 ] ; then
         break
       fi
-      if [ $i == 12 ] ; then 
+      if [ $i == 20 ] ; then 
         echo "[ERROR] MIMO did not complete successfully."
         echo 
         echo "Run ./docker-logs.sh for more information and try again."
         echo 
         exit 1
       fi
-      sleep 5
+      sleep 3
     done
 
     echo 
