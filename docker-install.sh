@@ -139,6 +139,9 @@ update_config() {
 
   api_url=`find_in_file MIMO_API_URL`
 
+  letsencrypt_email=`find_in_file LETSENCRYPT_EMAIL`
+  letsencrypt_email_orig=$letsencrypt_email
+
   while [[ "$ok_config" == "no" ]]
   do
     if [ ! -z "$hostname" ]
@@ -213,7 +216,7 @@ update_config() {
 
     if [ ! -z "$smtp_pass" ]
     then
-      read -p "enter your smtp password [$smtp_pass]: " new_value
+      read -p "enter your SMTP password [$smtp_pass]: " new_value
       if [ ! -z "$new_value" ]
       then
         smtp_pass="$new_value"
@@ -223,7 +226,7 @@ update_config() {
     if [ ! -z "$letencrypt_email" ]
     then
       echo "MIMO requires SSL to function correctly. Please enter an email so we can generate your SSL certificates."
-      read -p "enter your let's encrypt email [$admin_user]: " new_value
+      read -p "enter your let's encrypt email [$letsencrypt_email_orig]: " new_value
       if [ ! -z "$new_value" ]
       then
         letsencrypt_email="$new_value"
@@ -237,7 +240,7 @@ update_config() {
     echo "SMTP Port           : $smtp_port"
     echo "SMTP User           : $smtp_user"
     echo "SMTP Password       : $smtp_pass"
-    echo "Let's Encrypt Email : $smtp_pass"
+    echo "Let's Encrypt Email : $letsencrypt_email"
     echo ""
     read -p "Hit ENTER to continue. Type 'no' to try again. Ctrl+C will exit: " ok_config
 
@@ -246,7 +249,6 @@ update_config() {
     postgres_pass=`find_in_file POSTGRES_PASSWORD`
     rails_secret=`find_in_file RAILS_SECRET_KEY`
 
-    # cp $production_config.orig $production_config
     cp $production_config $production_config.backup
 
     sed -i -e "s/MIMO_DOMAIN=${hostname_orig}/MIMO_DOMAIN=$hostname/w $changelog" $production_config
@@ -334,8 +336,9 @@ update_config() {
     val=`find_in_file MIMO_DOMAIN`
     public_ip=`curl -s ifconfig.co`
 
-    ip=`check_dns "dashboard.${hostname}"`
+    sed -i -e "s/PUBLIC_IP=${val}/PUBLIC_IP=$public_ip/g" $production_config
 
+    ip=`check_dns "dashboard.${hostname}"`
     if [ "${ip}" != "${public_ip}" ] ; then 
       echo "dashboard.${hostname} does not resolve to this host. Please update your DNS records before continuing."
       exit 1
@@ -348,24 +351,24 @@ update_config() {
     fi
 
     echo -n "" > api.vars
-    echo "VIRTUAL_HOST=api.${hostname},admin.${hostname}" >> api.vars
-
-    if [ -s $letsencrypt_email ] ; then
-      echo "LETSENCRYPT_HOST=api.${hostname},admin.${hostname}" >> api.vars
-      echo "LETSENCRYPT_EMAIl=${letencrypt_email}" >> api.vars
-      echo "LETSENCRYPT_TEST=true" >> api.vars
-    fi
-
     echo -n "" > dashboard.vars
+
+    echo "VIRTUAL_HOST=api.${hostname},admin.${hostname}" >> api.vars
     echo "VIRTUAL_HOST=dashboard.${hostname}" >> dashboard.vars
 
     if [ -s $letsencrypt_email ] ; then
+      echo "LETSENCRYPT_HOST=api.${hostname},admin.${hostname}" >> api.vars
       echo "LETSENCRYPT_HOST=dashboard.${hostname}" >> dashboard.vars
-      echo "LETSENCRYPT_EMAIl=${letencrypt_email}" >> dashboard.vars
+      echo "LETSENCRYPT_TEST=true" >> api.vars
       echo "LETSENCRYPT_TEST=true" >> dashboard.vars
+
+      sed -i -e "s/LETSENCRYPT_EMAIL=${letsencrypt_email_orig}/LETSENCRYPT_EMAIL=$letsencrypt_email/w $changelog" $production_config
+      if [ -s $changelog ] ; then
+        echo "Added ${letsencrypt_email} as let's encrypt user"
+        rm $changelog
+      fi
     fi
 
-    sed -i -e "s/PUBLIC_IP=${val}/PUBLIC_IP=$public_ip/g" $production_config
 
     if [ -s $DEBUG ] ; then
       docker-compose pull && docker-compose up --force-recreate -d
