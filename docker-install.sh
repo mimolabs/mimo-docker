@@ -410,7 +410,7 @@ update_config() {
 }
 
 echo
-echo -e "\e[91mWelcome to the MIMO Community Edition Installer. Let's get started.\e[39m"
+echo -e "Welcome to the \e[91mMIMO! Community Edition\e[0m Installer. Let's get started."
 echo
 
 check_root
