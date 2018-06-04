@@ -302,8 +302,6 @@ update_config() {
         echo "Updated RAILS SECRET"
         rm $changelog
       fi
-    else
-      echo 'Not updating secret token'
     fi
 
     if [ "$postgres_pass" == "PASS" ] ; then
@@ -315,8 +313,6 @@ update_config() {
         echo "Updated postgres password"
         rm $changelog
       fi
-    else
-      echo 'Not updating postgres password'
     fi
 
     echo -n "" > api.vars
@@ -366,7 +362,7 @@ update_config() {
         echo "api.$hostname resolves ok, looking fine today."
         break
       fi
-      if [ $i == 10 ] ; then 
+      if [ $i == 2 ] ; then 
         echo "[ERROR] Installation of MIMO did not complete successfully."
         echo 
         echo "Run ./docker-logs.sh for more information"
