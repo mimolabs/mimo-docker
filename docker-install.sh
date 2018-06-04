@@ -340,13 +340,13 @@ update_config() {
 
     ip=`check_dns "dashboard.${hostname}"`
     if [ "${ip}" != "${public_ip}" ] ; then 
-      echo "dashboard.${hostname} does not resolve to this host. Please update your DNS records before continuing."
+      echo "\e[1[ERROR]\e dashboard.${hostname} does not resolve to this host. Please update your DNS records before continuing."
       exit 1
     fi
 
     ip=`check_dns "api.${hostname}"`
     if [ "${ip}" != "${public_ip}" ] ; then 
-      echo "api.${hostname} does not resolve to this host. Please update your DNS records before continuing."
+      echo "\e[1[ERROR]\e api.${hostname} does not resolve to this host. Please update your DNS records before continuing."
       exit 1
     fi
 
@@ -357,21 +357,17 @@ update_config() {
     echo "VIRTUAL_HOST=dashboard.${hostname}" >> dashboard.vars
 
     if [ $letsencrypt_email ] ; then
-      echo 7129387129837192837198273918237
-      echo 7129387129837192837198273918237
-      echo 7129387129837192837198273918237
-      echo 7129387129837192837198273918237
-      echo 7129387129837192837198273918237
       echo "LETSENCRYPT_HOST=api.${hostname},admin.${hostname}" >> api.vars
       echo "LETSENCRYPT_HOST=dashboard.${hostname}" >> dashboard.vars
       echo "LETSENCRYPT_TEST=true" >> api.vars
       echo "LETSENCRYPT_TEST=true" >> dashboard.vars
-
       sed -i -e "s/LETSENCRYPT_EMAIL=${letsencrypt_email_orig}/LETSENCRYPT_EMAIL=$letsencrypt_email/w $changelog" $production_config
       if [ -s $changelog ] ; then
         echo "Added ${letsencrypt_email} as let's encrypt user"
         rm $changelog
       fi
+    else
+      echo "\e[1[ERROR]\e You must set an email for let's encrypt! Otherwise we cannot secure your installation...."
     fi
 
     if [ $DEBUG ] ; then
@@ -382,14 +378,14 @@ update_config() {
       docker-compose pull && docker-compose up --force-recreate -d
     fi
 
-    echo 'Starting API and dashboard, please wait.'
+    echo 'Starting services, please wait - this might take a few seconds.'
     for i in {1..21}; do 
       response=$(curl --write-out %{http_code} -k --silent --output /dev/null https://api.$hostname/api/v1/ping.json)
       if [ "${response}" == 200 ] ; then
         break
       fi
       if [ $i == 20 ] ; then 
-        echo "[ERROR] MIMO did not complete successfully."
+        echo "\e[1[ERROR]\e MIMO did not complete successfully."
         echo 
         echo "Run ./docker-logs.sh for more information and try again."
         echo 
