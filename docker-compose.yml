@@ -6,14 +6,14 @@ services:
     command: ["redis-server", "--appendonly", "yes"]
     hostname: redis
     volumes:
-      - ./redis:/data
+      - ./db/redis:/data
   db:
     image: postgres
     restart: always
     env_file:
       - production.vars
     volumes:
-      - ./tmp/postgres:/var/lib/postgresql/data
+      - ./db/postgres:/var/lib/postgresql/data
 
   worker:
     restart: always

@@ -179,6 +179,16 @@ update_config() {
       fi
     fi
 
+    if [ ! -z "$letsencrypt_email" ]
+    then
+      # echo "MIMO requires SSL to function correctly. Please enter an email so we can generate your SSL certificates."
+      read -p "enter your let's encrypt email [$letsencrypt_email_orig]: " new_value
+      if [ ! -z "$new_value" ]
+      then
+        letsencrypt_email="$new_value"
+      fi
+    fi
+
     if [ ! -z "$smtp_host" ]
     then
       read -p "Enter your SMTP hostname [$smtp_host]: " new_value
@@ -223,24 +233,14 @@ update_config() {
       fi
     fi
 
-    if [ ! -z "$letsencrypt_email" ]
-    then
-      # echo "MIMO requires SSL to function correctly. Please enter an email so we can generate your SSL certificates."
-      read -p "enter your let's encrypt email [$letsencrypt_email_orig]: " new_value
-      if [ ! -z "$new_value" ]
-      then
-        letsencrypt_email="$new_value"
-      fi
-    fi
-
     echo -e "\nDoes this look right?\n"
     echo "Hostname            : $hostname"
     echo "Admin Email         : $admin_user"
+    echo "Let's Encrypt Email : $letsencrypt_email"
     echo "SMTP Host           : $smtp_host"
     echo "SMTP Port           : $smtp_port"
     echo "SMTP User           : $smtp_user"
     echo "SMTP Password       : $smtp_pass"
-    echo "Let's Encrypt Email : $letsencrypt_email"
     echo ""
     read -p "Hit ENTER to continue. Type 'no' to try again. Ctrl+C will exit: " ok_config
   done
@@ -304,7 +304,7 @@ update_config() {
   sed -i -e "s/MIMO_SMTP_DOMAIN=${smtp_domain_orig}/MIMO_SMTP_DOMAIN=$hostname/w $changelog" $production_config
   if [ -s $changelog ]
   then
-    echo "Added ${hostname} as SMTP domain"
+    # echo "Added ${hostname} as SMTP domain"
     rm $changelog
   fi
 
@@ -381,12 +381,14 @@ update_config() {
 
   echo
   echo -e "\e[38;2;240;143;104mStarting MIMO. Please wait while the installation completes...\e[0m"
-  for i in {1..20}; do 
+  echo "If this is the first time you've installed MIMO, it may take a few minutes to generate your keys etc"
+
+  for i in {1..40}; do 
     response=$(curl --write-out %{http_code} -k --silent --output /dev/null https://api.$hostname/api/v1/ping.json)
     if [ "${response}" == 200 ] ; then
       break
     fi
-    if [ $i == 20 ] ; then 
+    if [ $i == 40 ] ; then 
       echo -e "\e[91m[ERROR] MIMO did not complete successfully.\e[0m"
       echo 
       echo "Run ./docker-logs.sh for more information and try again."
