@@ -86,14 +86,17 @@ kill_docker() {
 check_config_exists() {
   FILE='production.vars'
   if [ ! -f $FILE ]; then
-    echo "File $FILE does not exist. Creating from defaults"
     cp $FILE.orig $FILE
   fi
 
   FILE='api.vars'
   if [ ! -f $FILE ]; then
-    echo "File $FILE does not exist. Creating from defaults"
-    cp $FILE.orig $FILE
+    echo -n '' > $FILE
+  fi
+
+  FILE='dashboard.vars'
+  if [ ! -f $FILE ]; then
+    echo -n '' > $FILE
   fi
 }
 

@@ -97,6 +97,7 @@ services:
     image: "ohmimo/mimo-dashboard"
     env_file:
       - production.vars
+      - dashboard.vars
     environment:
       - NODE_ENV=production
       - VIRTUAL_HOST=dashboard.wisp.services
