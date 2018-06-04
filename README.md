@@ -29,7 +29,7 @@ If you do have a domain name, all you need to do is add the records below to you
 
 Find the public IP address for your newly created server. This needs to be the publicly available IP address.
 
-Add the following A-records to your DNR records:
+Add the following A-records to your DNS records:
 
 - api
 - admin
