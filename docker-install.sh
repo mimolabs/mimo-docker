@@ -291,8 +291,7 @@ update_config() {
     fi
 
     sed -i -e "s/MIMO_ADMIN_USER=${admin_user_orig}/MIMO_ADMIN_USER=$admin_user/w $changelog" $production_config
-    if [ -s $changelog ]
-    then
+    if [ -s $changelog ] ; then
       echo "Added ${admin_user} as admin user"
       rm $changelog
     fi
@@ -301,8 +300,7 @@ update_config() {
       rails_secret=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
       sed -i -e "s/RAILS_SECRET_KEY=KEY/RAILS_SECRET_KEY=$rails_secret/w $changelog" $production_config
 
-      if [ -s $changelog ]
-      then
+      if [ -s $changelog ] ; then
         echo "Updated RAILS SECRET"
         rm $changelog
       fi
@@ -312,20 +310,10 @@ update_config() {
       postgres_pass=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
       sed -i -e "s/POSTGRES_PASSWORD=PASS/POSTGRES_PASSWORD=$postgres_pass/w $changelog" $production_config
 
-      if [ -s $changelog ]
-      then
+      if [ -s $changelog ] ; then
         echo "Updated postgres password"
         rm $changelog
       fi
-    fi
-
-    echo -n "" > api.vars
-    echo "VIRTUAL_HOST=api.${hostname},admin.${hostname}" >> api.vars
-
-    if [ $letsencrypt_email ] ; then
-      echo "LETSENCRYPT_HOST=api.${hostname},admin.${hostname}" >> api.vars
-      echo "LETSENCRYPT_EMAIl=${letencryptemail}" >> api.vars
-      echo "LETSENCRYPT_TEST=true" >> api.vars
     fi
 
     val=`find_in_file MIMO_DOMAIN`
@@ -344,10 +332,28 @@ update_config() {
       exit 1
     fi
 
+    echo -n "" > api.vars
+    echo "VIRTUAL_HOST=api.${hostname},admin.${hostname}" >> api.vars
+
+    if [ $letsencrypt_email ] ; then
+      echo "LETSENCRYPT_HOST=api.${hostname},admin.${hostname}" >> api.vars
+      echo "LETSENCRYPT_EMAIl=${letencryptemail}" >> api.vars
+      echo "LETSENCRYPT_TEST=true" >> api.vars
+    fi
+
+    echo -n "" > dashboard.vars
+    echo "VIRTUAL_HOST=dashboard.${hostname}" >> dashboard.vars
+
+    if [ $letsencrypt_email ] ; then
+      echo "LETSENCRYPT_HOST=dashboard.${hostname}" >> dashboard.vars
+      echo "LETSENCRYPT_EMAIl=${letencryptemail}" >> dashboard.vars
+      echo "LETSENCRYPT_TEST=true" >> dashboard.vars
+    fi
+
     sed -i -e "s/PUBLIC_IP=${val}/PUBLIC_IP=$public_ip/g" $production_config
 
     if [ $DEBUG ] ; then
-      docker-compose pull && docker-compose up --force-recreate
+      docker-compose pull && docker-compose up --force-recreate -d
     elif [ $FOREGROUND ] ; then
       docker-compose pull && docker-compose up --force-recreate
     else
