@@ -21,6 +21,8 @@ MIMO will NOT work without a domain name - you cannot use MIMO with an IP.
 
 If you don't have a domain name, there's a gazillion places online for you to get one from. We recommend Namecheap.
 
+If you do have a domain name, all you need to do is add the records below to your DNS.
+
 ## DNS records
 
 Find the public IP address for your newly created server. This needs to be the publicly available IP address.
@@ -46,6 +48,18 @@ We recommend using Cloudflare for your DNS however it's up to you who you chose.
 ## Firewall
 
 Ports 80 and 443 must be allowed - update your firewall settings to ensure these are open and accessible.
+
+## Email Server
+
+MIMO requires a functioning SMTP / Email server. You can use whoever you want but we recommend one of the following:
+
+- SendGrid
+- Mailgun
+- Elastic Email
+
+Once you've created your account, save the credentials as you'll need them during the installation process.
+
+We do not recommend using Gmail's SMTP server or your own one. The ones above are cheap and reliable.
 
 ## Login to your server
 
