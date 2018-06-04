@@ -100,12 +100,6 @@ services:
       - dashboard.vars
     environment:
       - NODE_ENV=production
-      - VIRTUAL_HOST=dashboard.wisp.services
-      - LETSENCRYPT_HOST=dashboard.wisp.services
-      - LETSENCRYPT_EMAIL=simon@polkaspots.com
-      - LETSENCRYPT_TEST=true
-    # depends_on:
-    #   - web
     volumes:
         - shared-volume:/etc/mimo
 
