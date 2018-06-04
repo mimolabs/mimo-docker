@@ -366,6 +366,7 @@ update_config() {
         echo "[ERROR] Installation of MIMO did not complete successfully."
         echo 
         echo "Run ./docker-logs.sh for more information"
+        exit 1
       fi
     done
 
