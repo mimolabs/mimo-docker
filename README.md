@@ -13,7 +13,7 @@
 
 ## Create a new server
 
-Instructions for each provider
+Instructions for each provider to follow...
 
 ## Update your DNS records
 
@@ -28,10 +28,10 @@ Add the following A-records to your DNR records:
 
 For example, if your public IP address is 80.90.10.10 and your chosen domain is wifi.com you need the following records:
 
-api.wifi.com - 80.90.10.10
-admin.wifi.com - 80.90.10.10
-dashboard.wifi.com - 80.90.10.10
-splash.wifi.com - 80.90.10.10
+- api.wifi.com - 80.90.10.10
+- admin.wifi.com - 80.90.10.10
+- dashboard.wifi.com - 80.90.10.10
+- splash.wifi.com - 80.90.10.10
 
 Make sure these resolve *before* you start the installation.
 
