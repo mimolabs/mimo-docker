@@ -404,13 +404,14 @@ update_config() {
     echo "An email has been sent to ${admin_user}. The email contains a magic link that you need to complete the installation."
     echo 
     echo 'You stay classy!'
+    echo
   done
 
 }
 
-echo -e '\e[91mWelcome to the MIMO Community Edition Installer.'
-echo 
-echo -e "\e[91mLet's get started.\e[39m"
+echo
+echo -e "\e[91mWelcome to the MIMO Community Edition Installer. Let's get started.\e[39m"
+echo
 
 check_root
 check_docker
