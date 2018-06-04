@@ -408,6 +408,10 @@ update_config() {
 
 }
 
+echo -e '\e[91mWelcome to the MIMO Community Edition Installer.'
+echo 
+echo -e "\e[91mLet's get started.\e[39m"
+
 check_root
 check_docker
 check_docker_compose
