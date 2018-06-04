@@ -15,6 +15,8 @@
 
 Instructions for each provider to follow...
 
+We recommend [Digital Ocean](https://m.do.co/c/8504487cbb3a) but you can use whoever you want. You can use this link to get $10 off your first server - that's two months free ;)
+
 ## Domain Name
 
 MIMO will NOT work without a domain name - you cannot use MIMO with an IP. 
@@ -71,7 +73,7 @@ Using your favourite shell, including putty or ssh, login to your newly created 
 ssh root@ip-address
 ```
 
-If you're using Digital Ocean, you will need to update your password.
+If you're using [Digital Ocean](https://m.do.co/c/8504487cbb3a), you will need to update your password.
 
 ### Install Docker and Git
 
