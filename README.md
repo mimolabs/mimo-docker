@@ -15,7 +15,7 @@
 
 Instructions for each provider to follow...
 
-We recommend [Digital Ocean](https://m.do.co/c/8504487cbb3a) but you can use whoever you want. You can use this link to get $10 off your first server - that's two months free ;)
+We recommend [Digital Ocean](https://m.do.co/c/8504487cbb3a) but you can use whoever you want. You can use [this link](https://m.do.co/c/8504487cbb3a) to get $10 off your first server - that's two months free ;)
 
 ## Domain Name
 
