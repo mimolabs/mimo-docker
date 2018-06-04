@@ -136,6 +136,7 @@ update_config() {
 
   smtp_domain_orig=`find_in_file MIMO_SMTP_DOMAIN`
   dashboard_url=`find_in_file MIMO_DASHBOARD_URL`
+
   api_url=`find_in_file MIMO_API_URL`
 
   while [[ "$ok_config" == "no" ]]
@@ -338,7 +339,7 @@ update_config() {
     echo -n "" > api.vars
     echo "VIRTUAL_HOST=api.${hostname},admin.${hostname}" >> api.vars
 
-    if [ $letsencrypt_email ] ; then
+    if [ -s $letsencrypt_email ] ; then
       echo "LETSENCRYPT_HOST=api.${hostname},admin.${hostname}" >> api.vars
       echo "LETSENCRYPT_EMAIl=${letencryptemail}" >> api.vars
       echo "LETSENCRYPT_TEST=true" >> api.vars
@@ -347,7 +348,7 @@ update_config() {
     echo -n "" > dashboard.vars
     echo "VIRTUAL_HOST=dashboard.${hostname}" >> dashboard.vars
 
-    if [ $letsencrypt_email ] ; then
+    if [ -s $letsencrypt_email ] ; then
       echo "LETSENCRYPT_HOST=dashboard.${hostname}" >> dashboard.vars
       echo "LETSENCRYPT_EMAIl=${letencryptemail}" >> dashboard.vars
       echo "LETSENCRYPT_TEST=true" >> dashboard.vars
@@ -355,9 +356,9 @@ update_config() {
 
     sed -i -e "s/PUBLIC_IP=${val}/PUBLIC_IP=$public_ip/g" $production_config
 
-    if [ $DEBUG ] ; then
+    if [ -s $DEBUG ] ; then
       docker-compose pull && docker-compose up --force-recreate -d
-    elif [ $FOREGROUND ] ; then
+    elif [ -s $FOREGROUND ] ; then
       docker-compose pull && docker-compose up --force-recreate
     else
       docker-compose pull && docker-compose up --force-recreate -d
