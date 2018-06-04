@@ -354,11 +354,10 @@ update_config() {
       docker-compose pull && docker-compose up --force-recreate -d
     fi
 
-    echo 'Sleeping to allow things to settle down.'
+    echo 'Starting API and dashboard, please wait.'
     for i in {1..12}; do 
       response=$(curl --write-out %{http_code} -k --silent --output /dev/null https://api.$hostname/api/v1/ping.json)
       if [ "${response}" == 200 ] ; then
-        echo "api.$hostname resolves ok, looking fine today."
         break
       fi
       if [ $i == 12 ] ; then 
