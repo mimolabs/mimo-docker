@@ -243,170 +243,169 @@ update_config() {
     echo "Let's Encrypt Email : $letsencrypt_email"
     echo ""
     read -p "Hit ENTER to continue. Type 'no' to try again. Ctrl+C will exit: " ok_config
-
-    echo "Writing configs to $production_config. Then we'll start the magic"
-
-    postgres_pass=`find_in_file POSTGRES_PASSWORD`
-    rails_secret=`find_in_file RAILS_SECRET_KEY`
-
-    cp $production_config $production_config.backup
-
-    sed -i -e "s/MIMO_DOMAIN=${hostname_orig}/MIMO_DOMAIN=$hostname/w $changelog" $production_config
-    if [ -s $changelog ]
-    then
-      echo "Added ${hostname} as primary domain"
-      rm $changelog
-    fi
-
-    sed -i -e "s~MIMO_DASHBOARD_URL=${dashboard_url}~MIMO_DASHBOARD_URL=https://dashboard.$hostname~w $changelog" $production_config
-    if [ -s $changelog ]
-    then
-      echo "Added https://dashboard.${hostname} as dashboard url"
-      rm $changelog
-    fi
-
-    sed -i -e "s~MIMO_API_URL=${api_url}~MIMO_API_URL=https://api.$hostname~w $changelog" $production_config
-    if [ -s $changelog ]
-    then
-      echo "Added https://api.${hostname} as API url"
-      rm $changelog
-    fi
-
-    sed -i -e "s/MIMO_SMTP_HOST=${smtp_host_orig}/MIMO_SMTP_HOST=$smtp_host/w $changelog" $production_config
-    if [ -s $changelog ]
-    then
-      echo "Added ${smtp_host} as SMTP hostname"
-      rm $changelog
-    fi
-
-    sed -i -e "s/MIMO_SMTP_PORT=${smtp_port_orig}/MIMO_SMTP_PORT=$smtp_port/w $changelog" $production_config
-    if [ -s $changelog ]
-    then
-      echo "Added ${smtp_port} as SMTP port"
-      rm $changelog
-    fi
-
-    sed -i -e "s/MIMO_SMTP_USER=${smtp_user_orig}/MIMO_SMTP_USER=$smtp_user/w $changelog" $production_config
-    if [ -s $changelog ]
-    then
-      echo "Added ${smtp_user} as SMTP user"
-      rm $changelog
-    fi
-
-    sed -i -e "s/MIMO_SMTP_PASS=${smtp_pass_orig}/MIMO_SMTP_PASS=$smtp_pass/w $changelog" $production_config
-    if [ -s $changelog ]
-    then
-      echo "Added ${smtp_pass} as SMTP pass"
-      rm $changelog
-    fi
-
-    sed -i -e "s/MIMO_SMTP_DOMAIN=${smtp_domain_orig}/MIMO_SMTP_DOMAIN=$hostname/w $changelog" $production_config
-    if [ -s $changelog ]
-    then
-      echo "Added ${hostname} as SMTP domain"
-      rm $changelog
-    fi
-
-    sed -i -e "s/MIMO_ADMIN_USER=${admin_user_orig}/MIMO_ADMIN_USER=$admin_user/w $changelog" $production_config
-    if [ -s $changelog ] ; then
-      echo "Added ${admin_user} as admin user"
-      rm $changelog
-    fi
-
-    if [ "$rails_secret" == "KEY" ] ; then
-      rails_secret=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
-      sed -i -e "s/RAILS_SECRET_KEY=KEY/RAILS_SECRET_KEY=$rails_secret/w $changelog" $production_config
-
-      if [ -s $changelog ] ; then
-        echo "Updated RAILS SECRET"
-        rm $changelog
-      fi
-    fi
-
-    if [ "$postgres_pass" == "PASS" ] ; then
-      postgres_pass=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
-      sed -i -e "s/POSTGRES_PASSWORD=PASS/POSTGRES_PASSWORD=$postgres_pass/w $changelog" $production_config
-
-      if [ -s $changelog ] ; then
-        echo "Updated postgres password"
-        rm $changelog
-      fi
-    fi
-
-    val=`find_in_file MIMO_DOMAIN`
-    public_ip=`curl -s ifconfig.co`
-
-    sed -i -e "s/PUBLIC_IP=${val}/PUBLIC_IP=$public_ip/g" $production_config
-
-    ip=`check_dns "dashboard.${hostname}"`
-    if [ "${ip}" != "${public_ip}" ] ; then 
-      echo "\e[91m[ERROR] dashboard.${hostname} does not resolve to this host. Please update your DNS records before continuing.\e[0m"
-      exit 1
-    fi
-
-    ip=`check_dns "api.${hostname}"`
-    if [ "${ip}" != "${public_ip}" ] ; then 
-      echo "\e[91m[ERROR] api.${hostname} does not resolve to this host. Please update your DNS records before continuing.\e[0m"
-      exit 1
-    fi
-
-    echo -n "" > api.vars
-    echo -n "" > dashboard.vars
-
-    echo "VIRTUAL_HOST=api.${hostname},admin.${hostname}" >> api.vars
-    echo "VIRTUAL_HOST=dashboard.${hostname}" >> dashboard.vars
-
-    if [ $letsencrypt_email ] ; then
-      echo "LETSENCRYPT_HOST=api.${hostname},admin.${hostname}" >> api.vars
-      echo "LETSENCRYPT_HOST=dashboard.${hostname}" >> dashboard.vars
-      echo "LETSENCRYPT_TEST=true" >> api.vars
-      echo "LETSENCRYPT_TEST=true" >> dashboard.vars
-      sed -i -e "s/LETSENCRYPT_EMAIL=${letsencrypt_email_orig}/LETSENCRYPT_EMAIL=$letsencrypt_email/w $changelog" $production_config
-      if [ -s $changelog ] ; then
-        echo "Added ${letsencrypt_email} as let's encrypt user"
-        rm $changelog
-      fi
-    else
-      echo "\e[91m[ERROR] You must set an email for let's encrypt! Otherwise we cannot secure your installation....\e[0m"
-    fi
-
-    if [ $DEBUG ] ; then
-      docker-compose pull && docker-compose up --force-recreate -d
-    elif [ $FOREGROUND ] ; then
-      docker-compose pull && docker-compose up --force-recreate
-    else
-      docker-compose pull && docker-compose up --force-recreate -d
-    fi
-
-    echo
-    echo -e "\e[38;2;240;143;104mStarting MIMO. Please wait while the installation completes...\e[0m"
-    for i in {1..20}; do 
-      response=$(curl --write-out %{http_code} -k --silent --output /dev/null https://api.$hostname/api/v1/ping.json)
-      if [ "${response}" == 200 ] ; then
-        break
-      fi
-      if [ $i == 20 ] ; then 
-        echo -e "\e[91m[ERROR] MIMO did not complete successfully.\e[0m"
-        echo 
-        echo "Run ./docker-logs.sh for more information and try again."
-        echo 
-        exit 1
-      fi
-      sleep 3
-    done
-
-    echo 
-    echo -e "\e[38;5;42m[SUCCESS] MIMO is up and running!\e[0m"
-    echo '----------------------------'
-    echo
-    echo "You can access the dashboard on https://dashboard.${hostname}"
-    echo 
-    echo "An email has been sent to ${admin_user}. The email contains a magic link that you need to complete the installation."
-    echo 
-    echo 'You stay classy!'
-    echo
   done
 
+  echo "Writing configs to $production_config. Then we'll start the magic"
+
+  postgres_pass=`find_in_file POSTGRES_PASSWORD`
+  rails_secret=`find_in_file RAILS_SECRET_KEY`
+
+  cp $production_config $production_config.backup
+
+  sed -i -e "s/MIMO_DOMAIN=${hostname_orig}/MIMO_DOMAIN=$hostname/w $changelog" $production_config
+  if [ -s $changelog ]
+  then
+    echo "Added ${hostname} as primary domain"
+    rm $changelog
+  fi
+
+  sed -i -e "s~MIMO_DASHBOARD_URL=${dashboard_url}~MIMO_DASHBOARD_URL=https://dashboard.$hostname~w $changelog" $production_config
+  if [ -s $changelog ]
+  then
+    echo "Added https://dashboard.${hostname} as dashboard url"
+    rm $changelog
+  fi
+
+  sed -i -e "s~MIMO_API_URL=${api_url}~MIMO_API_URL=https://api.$hostname~w $changelog" $production_config
+  if [ -s $changelog ]
+  then
+    echo "Added https://api.${hostname} as API url"
+    rm $changelog
+  fi
+
+  sed -i -e "s/MIMO_SMTP_HOST=${smtp_host_orig}/MIMO_SMTP_HOST=$smtp_host/w $changelog" $production_config
+  if [ -s $changelog ]
+  then
+    echo "Added ${smtp_host} as SMTP hostname"
+    rm $changelog
+  fi
+
+  sed -i -e "s/MIMO_SMTP_PORT=${smtp_port_orig}/MIMO_SMTP_PORT=$smtp_port/w $changelog" $production_config
+  if [ -s $changelog ]
+  then
+    echo "Added ${smtp_port} as SMTP port"
+    rm $changelog
+  fi
+
+  sed -i -e "s/MIMO_SMTP_USER=${smtp_user_orig}/MIMO_SMTP_USER=$smtp_user/w $changelog" $production_config
+  if [ -s $changelog ]
+  then
+    echo "Added ${smtp_user} as SMTP user"
+    rm $changelog
+  fi
+
+  sed -i -e "s/MIMO_SMTP_PASS=${smtp_pass_orig}/MIMO_SMTP_PASS=$smtp_pass/w $changelog" $production_config
+  if [ -s $changelog ]
+  then
+    echo "Added ${smtp_pass} as SMTP pass"
+    rm $changelog
+  fi
+
+  sed -i -e "s/MIMO_SMTP_DOMAIN=${smtp_domain_orig}/MIMO_SMTP_DOMAIN=$hostname/w $changelog" $production_config
+  if [ -s $changelog ]
+  then
+    echo "Added ${hostname} as SMTP domain"
+    rm $changelog
+  fi
+
+  sed -i -e "s/MIMO_ADMIN_USER=${admin_user_orig}/MIMO_ADMIN_USER=$admin_user/w $changelog" $production_config
+  if [ -s $changelog ] ; then
+    echo "Added ${admin_user} as admin user"
+    rm $changelog
+  fi
+
+  if [ "$rails_secret" == "KEY" ] ; then
+    rails_secret=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
+    sed -i -e "s/RAILS_SECRET_KEY=KEY/RAILS_SECRET_KEY=$rails_secret/w $changelog" $production_config
+
+    if [ -s $changelog ] ; then
+      echo "Updated RAILS SECRET"
+      rm $changelog
+    fi
+  fi
+
+  if [ "$postgres_pass" == "PASS" ] ; then
+    postgres_pass=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+    sed -i -e "s/POSTGRES_PASSWORD=PASS/POSTGRES_PASSWORD=$postgres_pass/w $changelog" $production_config
+
+    if [ -s $changelog ] ; then
+      echo "Updated postgres password"
+      rm $changelog
+    fi
+  fi
+
+  val=`find_in_file MIMO_DOMAIN`
+  public_ip=`curl -s ifconfig.co`
+
+  sed -i -e "s/PUBLIC_IP=${val}/PUBLIC_IP=$public_ip/g" $production_config
+
+  ip=`check_dns "dashboard.${hostname}"`
+  if [ "${ip}" != "${public_ip}" ] ; then 
+    echo "\e[91m[ERROR] dashboard.${hostname} does not resolve to this host. Please update your DNS records before continuing.\e[0m"
+    exit 1
+  fi
+
+  ip=`check_dns "api.${hostname}"`
+  if [ "${ip}" != "${public_ip}" ] ; then 
+    echo "\e[91m[ERROR] api.${hostname} does not resolve to this host. Please update your DNS records before continuing.\e[0m"
+    exit 1
+  fi
+
+  echo -n "" > api.vars
+  echo -n "" > dashboard.vars
+
+  echo "VIRTUAL_HOST=api.${hostname},admin.${hostname}" >> api.vars
+  echo "VIRTUAL_HOST=dashboard.${hostname}" >> dashboard.vars
+
+  if [ $letsencrypt_email ] ; then
+    echo "LETSENCRYPT_HOST=api.${hostname},admin.${hostname}" >> api.vars
+    echo "LETSENCRYPT_HOST=dashboard.${hostname}" >> dashboard.vars
+    echo "LETSENCRYPT_TEST=true" >> api.vars
+    echo "LETSENCRYPT_TEST=true" >> dashboard.vars
+    sed -i -e "s/LETSENCRYPT_EMAIL=${letsencrypt_email_orig}/LETSENCRYPT_EMAIL=$letsencrypt_email/w $changelog" $production_config
+    if [ -s $changelog ] ; then
+      echo "Added ${letsencrypt_email} as let's encrypt user"
+      rm $changelog
+    fi
+  else
+    echo "\e[91m[ERROR] You must set an email for let's encrypt! Otherwise we cannot secure your installation....\e[0m"
+  fi
+
+  if [ $DEBUG ] ; then
+    docker-compose pull && docker-compose up --force-recreate -d
+  elif [ $FOREGROUND ] ; then
+    docker-compose pull && docker-compose up --force-recreate
+  else
+    docker-compose pull && docker-compose up --force-recreate -d
+  fi
+
+  echo
+  echo -e "\e[38;2;240;143;104mStarting MIMO. Please wait while the installation completes...\e[0m"
+  for i in {1..20}; do 
+    response=$(curl --write-out %{http_code} -k --silent --output /dev/null https://api.$hostname/api/v1/ping.json)
+    if [ "${response}" == 200 ] ; then
+      break
+    fi
+    if [ $i == 20 ] ; then 
+      echo -e "\e[91m[ERROR] MIMO did not complete successfully.\e[0m"
+      echo 
+      echo "Run ./docker-logs.sh for more information and try again."
+      echo 
+      exit 1
+    fi
+    sleep 3
+  done
+
+  echo 
+  echo -e "\e[38;5;42m[SUCCESS] MIMO is up and running!\e[0m"
+  echo '----------------------------'
+  echo
+  echo "You can access the dashboard on https://dashboard.${hostname}"
+  echo 
+  echo "An email has been sent to ${admin_user}. The email contains a magic link that you need to complete the installation."
+  echo 
+  echo 'You stay classy!'
+  echo
 }
 
 echo
