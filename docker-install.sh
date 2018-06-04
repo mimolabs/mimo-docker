@@ -225,7 +225,7 @@ update_config() {
 
     if [ ! -z "$letencrypt_email" ]
     then
-      echo "MIMO requires SSL to function correctly. Please enter an email so we can generate your SSL certificates."
+      # echo "MIMO requires SSL to function correctly. Please enter an email so we can generate your SSL certificates."
       read -p "enter your let's encrypt email [$letsencrypt_email_orig]: " new_value
       if [ ! -z "$new_value" ]
       then
@@ -368,7 +368,6 @@ update_config() {
         rm $changelog
       fi
     fi
-
 
     if [ -s $DEBUG ] ; then
       docker-compose pull && docker-compose up --force-recreate -d
