@@ -332,16 +332,12 @@ update_config() {
     if [ "${ip}" != "${public_ip}" ] ; then 
       echo "dashboard.${hostname} does not resolve to this host. Please update your DNS records before continuing."
       exit 1
-    else
-      echo "dashboard.${hostname} resolves to $ip. OK!"
     fi
 
     ip=`check_dns "api.${hostname}"`
     if [ "${ip}" != "${public_ip}" ] ; then 
       echo "api.${hostname} does not resolve to this host. Please update your DNS records before continuing."
       exit 1
-    else
-      echo "api.${hostname} resolves to $ip. OK!"
     fi
 
     sed -i -e "s/PUBLIC_IP=${val}/PUBLIC_IP=$public_ip/g" $production_config
@@ -355,23 +351,24 @@ update_config() {
     fi
 
     echo 'Sleeping to allow things to settle down.'
-    for i in {1..2}; do 
+    for i in {1..12}; do 
       response=$(curl --write-out %{http_code} -k --silent --output /dev/null https://api.$hostname/api/v1/ping.json)
       echo $response
       if [ "${response}" == 200 ] ; then
         echo "api.$hostname resolves ok, looking fine today."
         break
       fi
-      if [ $i == 2 ] ; then 
-        echo "[ERROR] Installation of MIMO did not complete successfully."
+      if [ $i == 12 ] ; then 
+        echo "[ERROR] MIMO did not complete successfully."
         echo 
-        echo "Run ./docker-logs.sh for more information"
+        echo "Run ./docker-logs.sh for more information and try again."
+        echo 
         exit 1
       fi
     done
 
     echo 
-    echo 'Successfully installed MIMO!'
+    echo '[SUCCESS] MIMO is up and running!'
     echo '----------------------------'
     echo
     echo "You can access the dashboard on https://dashboard.${hostname}"
