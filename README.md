@@ -49,9 +49,11 @@ If you're using Digital Ocean, you will need to update your password.
 
 ### Install Docker and Git
 
+```
 wget -qO- https://get.docker.com/ | sh
+```
 
-This installs docker & on your machine. You may need to install Git manually.
+This installs Docker & Git on your machine. You may need to install Git manually.
 
 Check they were installed correctly. Git:
 
@@ -88,3 +90,7 @@ cd /var/mimo
 You must enter valid SMTP credentials otherwise your MIMO installation won't work.
 
 After the installation has completed, you should receive a welcome message.
+
+### Finishing Up
+
+The email that was sent includes a magic link that will allow you to complete the installation. If you did not get the email, please check your spam and ensure you set the correct SMTP credentials.
