@@ -249,6 +249,7 @@ update_config() {
 
   postgres_pass=`find_in_file POSTGRES_PASSWORD`
   rails_secret=`find_in_file RAILS_SECRET_KEY`
+  secret_key=`find_in_file SECRET_KEY_BASE`
 
   cp $production_config $production_config.backup
 
@@ -297,7 +298,6 @@ update_config() {
   sed -i -e "s/MIMO_SMTP_PASS=${smtp_pass_orig}/MIMO_SMTP_PASS=$smtp_pass/w $changelog" $production_config
   if [ -s $changelog ]
   then
-    echo "Added ${smtp_pass} as SMTP pass"
     rm $changelog
   fi
 
@@ -320,6 +320,16 @@ update_config() {
 
     if [ -s $changelog ] ; then
       echo "Updated RAILS SECRET"
+      rm $changelog
+    fi
+  fi
+
+  if [ "$secret_key" == "KEY" ] ; then
+    secret_key=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
+    sed -i -e "s/SECRET_KEY_BASE=KEY/SECRET_KEY_BASE=$secret_key/w $changelog" $production_config
+
+    if [ -s $changelog ] ; then
+      echo "Updated SECRET"
       rm $changelog
     fi
   fi
@@ -381,7 +391,7 @@ update_config() {
 
   echo
   echo -e "\e[38;2;240;143;104mStarting MIMO. Please wait while the installation completes...\e[0m"
-  echo "If this is the first time you've installed MIMO, it may take a few minutes to generate your keys etc"
+  echo "If this is the first time you've installed MIMO, it may take a few minutes to generate your keys etc...."
 
   for i in {1..40}; do 
     response=$(curl --write-out %{http_code} -k --silent --output /dev/null https://api.$hostname/api/v1/ping.json)
