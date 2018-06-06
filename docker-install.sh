@@ -329,7 +329,7 @@ update_config() {
     sed -i -e "s/SECRET_KEY_BASE=KEY/SECRET_KEY_BASE=$secret_key/w $changelog" $production_config
 
     if [ -s $changelog ] ; then
-      echo "Updated SECRET"
+      echo "Updated secret keybase"
       rm $changelog
     fi
   fi
@@ -412,8 +412,6 @@ update_config() {
   echo -e "\e[38;5;42m[SUCCESS] MIMO is up and running!\e[0m"
   echo '----------------------------'
   echo
-  echo "You can access the dashboard on https://dashboard.${hostname}"
-  echo 
   echo "An email has been sent to ${admin_user}. The email contains a magic link that you need to complete the installation."
   echo 
   echo 'You stay classy!'
