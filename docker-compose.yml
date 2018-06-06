@@ -15,20 +15,18 @@ services:
     volumes:
       - ./db/postgres:/var/lib/postgresql/data
 
-  # worker:
-  #   restart: always
-  #   image: "ohmimo/mimo-worker"
-  #   env_file:
-  #     - production.vars
-  #   environment:
-  #     - RAILS_LOG_TO_STDOUT=true
-  #     - RAILS_SERVE_STATIC_FILES=true
-  #     - REDIS_HOST=redis
-  #   command: bash -c "sidekiq"
-  #   depends_on:
-  #     - db
-  #     - api
-  #     - redis
+  worker:
+    restart: always
+    image: "ohmimo/mimo-worker"
+    env_file:
+      - production.vars
+    environment:
+      - RAILS_LOG_TO_STDOUT=true
+      - RAILS_SERVE_STATIC_FILES=true
+      - REDIS_HOST=redis
+    command: bash -c "sidekiq"
+    depends_on:
+      - api
 
   nginx:
     restart: always
