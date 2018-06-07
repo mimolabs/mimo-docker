@@ -385,7 +385,7 @@ update_config() {
   elif [ $FOREGROUND ] ; then
     docker-compose pull && docker-compose up --force-recreate
   else
-    docker-compose pull && docker-compose up --force-recreate -d
+    docker-compose pull && docker-compose up --force-recreate
   fi
 
   echo
