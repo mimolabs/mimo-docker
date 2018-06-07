@@ -351,13 +351,13 @@ update_config() {
 
   ip=`check_dns "dashboard.${hostname}"`
   if [ "${ip}" != "${public_ip}" ] ; then 
-    echo "\e[91m[ERROR] dashboard.${hostname} does not resolve to this host. Please update your DNS records before continuing.\e[0m"
+    echo -e "\e[91m[ERROR] dashboard.${hostname} does not resolve to this host. Please update your DNS records before continuing.\e[0m"
     exit 1
   fi
 
   ip=`check_dns "api.${hostname}"`
   if [ "${ip}" != "${public_ip}" ] ; then 
-    echo "\e[91m[ERROR] api.${hostname} does not resolve to this host. Please update your DNS records before continuing.\e[0m"
+    echo -e "\e[91m[ERROR] api.${hostname} does not resolve to this host. Please update your DNS records before continuing.\e[0m"
     exit 1
   fi
 
