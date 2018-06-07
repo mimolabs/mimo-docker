@@ -51,7 +51,7 @@ services:
   letsencrypt:
     restart: always
     image: jrcs/letsencrypt-nginx-proxy-companion
-    container_name: letsencrypt-nginx-proxy-companion
+    container_name: letsencrypt
     volumes:
       - 'nginx-config:/etc/nginx/conf.d'
       - 'nginx-certs:/etc/nginx/certs'
@@ -74,8 +74,6 @@ services:
     depends_on:
       - redis
       - db
-    expose:
-      - "80"
     volumes:
         - shared-volume:/etc/mimo
 
