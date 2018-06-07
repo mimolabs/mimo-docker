@@ -63,6 +63,10 @@ Once you've created your account, save the credentials as you'll need them durin
 
 We do not recommend using Gmail's SMTP server or your own one. The ones above are cheap and reliable.
 
+### Let's Encrypt
+
+Your MIMO installation will be secured using [Let's Encrypt](https://letsencrypt.org/) certificates. During the installation process, you will need to enter an email address for the Let's Encrypt service. This must be a functioning email.
+
 ## Login to your server
 
 bla bla bla
