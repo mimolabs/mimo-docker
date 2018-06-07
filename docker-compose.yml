@@ -94,8 +94,7 @@ services:
         interval: 30s
         timeout: 1s
         retries: 5
-
-    # command: ["ls", "./wait-for-it.sh", "http://api:8080/api/v1/ping.json", "node", "server/app.js"]
+    command: ["node", "server/app.js"]
 
   # worker:
   #   restart: always
