@@ -92,8 +92,8 @@ services:
         - shared-volume:/etc/mimo
     depends_on:
       - api
-    # command: ["./wait-for-it.sh", "api:8080", "node", "server/app.js"]
-    command: sh -c './wait-for-it.sh api:8080 -- npm start'
+    command: ["./wait-for-it.sh", "api:8080", "node", "server/app.js"]
+    # command: sh -c './wait-for-it.sh api:8080 -- npm start'
 
 
 
