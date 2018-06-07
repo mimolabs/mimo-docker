@@ -80,7 +80,7 @@ services:
         - shared-volume:/etc/mimo
 
   dashboard:
-    restart: always
+    restart: on-failure
     image: "ohmimo/mimo-frontend"
     env_file:
       - production.vars
@@ -90,7 +90,7 @@ services:
     volumes:
         - shared-volume:/etc/mimo
     healthcheck:
-        test: ["CMD", "curl", "-f", "http://api:8008/api/v1/ping.json"]
+        test: ["CMD", "curl", "-f", "-L", "http://api:8008/api/v1/ping.json"]
         interval: 30s
         timeout: 1s
         retries: 5
