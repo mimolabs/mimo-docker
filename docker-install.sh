@@ -394,8 +394,9 @@ update_config() {
 
   echo
   echo -e "\e[38;2;240;143;104mStarting MIMO. Please wait while the installation completes...\e[0m"
-  echo "If this is the first time you've installed MIMO, it may take a few minutes to generate your keys etc...."
+  echo "If this is the first time you've installed MIMO, it may take a few minutes to generate your keys etc."
 
+  cursor=.
   for i in {1..100}; do 
     response=$(curl --write-out %{http_code} -k --silent --output /dev/null https://api.$hostname/api/v1/ping.json)
     if [ "${response}" == 200 ] ; then
@@ -408,6 +409,8 @@ update_config() {
       echo 
       exit 1
     fi
+    cursor=$cursor.
+    echo -ne "${cursor} +\r"
     sleep 3
   done
 
