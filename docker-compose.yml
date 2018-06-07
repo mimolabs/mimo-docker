@@ -66,11 +66,12 @@ services:
 
   api:
     restart: always
-    image: "ohmimo/mimo-api:latest"
+    # image: "ohmimo/mimo-api:latest"
+    imagae: 'tutum/apache-php'
     env_file:
       - production.vars
       - api.vars
-    command: bash -c "bundle exec rake db:create && rake db:migrate && bundle exec rake production:bootstrap && bundle exec rake assets:precompile && bundle exec puma -C /myapp/config/puma.rb"
+    # command: bash -c "bundle exec rake db:create && rake db:migrate && bundle exec rake production:bootstrap && bundle exec rake assets:precompile && bundle exec puma -C /myapp/config/puma.rb"
     depends_on:
       - redis
       - db
