@@ -77,21 +77,21 @@ services:
     volumes:
         - shared-volume:/etc/mimo
 
-  dashboard:
-    restart: always
-    # image: "ohmimo/mimo-frontend"
-    image: "ohmimo/mimo-dash"
-    env_file:
-      - production.vars
-      - dashboard.vars
-    environment:
-      - NODE_ENV=production
-    volumes:
-        - shared-volume:/etc/mimo
-    depends_on:
-      - api
-    command: ["./wait-for-it.sh", "api:8080", "node", "server/app.js"]
-    # command: sh -c './wait-for-it.sh api:8080 -- npm start'
+  # dashboard:
+  #   restart: always
+  #   # image: "ohmimo/mimo-frontend"
+  #   image: "ohmimo/mimo-dash"
+  #   env_file:
+  #     - production.vars
+  #     - dashboard.vars
+  #   environment:
+  #     - NODE_ENV=production
+  #   volumes:
+  #       - shared-volume:/etc/mimo
+  #   depends_on:
+  #     - api
+  #   command: ["./wait-for-it.sh", "api:8080", "node", "server/app.js"]
+  #   # command: sh -c './wait-for-it.sh api:8080 -- npm start'
 
 
 
