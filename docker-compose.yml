@@ -67,7 +67,7 @@ services:
   api:
     restart: always
     # image: "ohmimo/mimo-api:latest"
-    imagae: 'tutum/apache-php'
+    image: 'tutum/apache-php'
     env_file:
       - production.vars
       - api.vars
