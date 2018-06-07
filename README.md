@@ -122,3 +122,26 @@ After the installation has completed, you should receive a welcome message.
 ### Finishing Up
 
 The email that was sent includes a magic link that will allow you to complete the installation. If you did not get the email, please check your spam and ensure you set the correct SMTP credentials.
+
+## Troubleshooting
+
+If you see any errors, you can re-run the installer with debug mode enabled:
+
+```
+DEBUG=1 ./docker-install.sh
+```
+
+This will run the instller in the foreground - you should be able to see any errors in the terminal.
+
+## Common Problems
+
+You've run in the foreground and can see a message saying out of space, or similar.
+
+This happens if you've got too many Docker images on your machine.
+
+The simplest way is to remove all the MIMO images and re-build:
+
+```
+docker-compose down --rmi all
+./docker-install.sh
+```
