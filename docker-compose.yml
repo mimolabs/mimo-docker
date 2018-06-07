@@ -101,7 +101,8 @@ services:
     volumes:
         - shared-volume:/etc/mimo
     depends_on:
-      - api
+      - db
+      - redis
 
 volumes:
   shared-volume:

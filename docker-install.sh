@@ -350,7 +350,7 @@ update_config() {
 
   ip=`check_dns "dashboard.${hostname}"`
   if [ "${ip}" != "${public_ip}" ] ; then 
-    echo -e "\e[91m[ERROR] dashboard.${hostname} does not resolve to this host. Please update your DNS records before continuing. Your public IP is ${public_ip} \e[0m"
+    echo -e "\e[91m[ERROR] dashboard.${hostname} does not resolve to this host. Please update your DNS records before continuing. Your server's public IP is ${public_ip}!! \e[0m"
     exit 1
   fi
 
