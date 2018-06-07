@@ -181,8 +181,10 @@ update_config() {
 
     if [ ! -z "$letsencrypt_email" ]
     then
-      # echo "MIMO requires SSL to function correctly. Please enter an email so we can generate your SSL certificates."
-      read -p "enter your let's encrypt email [$letsencrypt_email_orig]: " new_value
+      if [ "$letsencrypt_email" == "email@example.com" ] ; then 
+        letsencrypt_email=$admin_user
+      fi
+      read -p "enter your let's encrypt email [$letsencrypt_email]: " new_value
       if [ ! -z "$new_value" ]
       then
         letsencrypt_email="$new_value"
@@ -418,7 +420,7 @@ update_config() {
 }
 
 echo
-echo -e "\e[38;5;42mWelcome to the \e[91mMIMO! Community Edition\e[0m. \e[38;5;42mLet's get started.\e[0m"
+echo -e "\e[38;5;42mWelcome to the \e[91mMIMO Community Edition!\e[0m \e[38;5;42mLet's get started.\e[0m"
 echo
 
 check_root
