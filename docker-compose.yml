@@ -74,6 +74,7 @@ services:
     depends_on:
       - redis
       - db
+      - nginx
     volumes:
         - shared-volume:/etc/mimo
 
