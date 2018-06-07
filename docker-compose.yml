@@ -61,6 +61,10 @@ services:
     environment:
       - NGINX_DOCKER_GEN_CONTAINER=nginx-docker-gen
       - NGINX_PROXY_CONTAINER=nginx
+    depends_on:
+      - api
+    command:
+      CMD [ "sleep", "30", "/bin/bash", "/app/start.sh" ]
 
   api:
     restart: always
