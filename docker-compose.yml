@@ -61,8 +61,6 @@ services:
     environment:
       - NGINX_DOCKER_GEN_CONTAINER=nginx-docker-gen
       - NGINX_PROXY_CONTAINER=nginx
-    depends_on:
-      - dashboard
 
   api:
     restart: always
@@ -92,8 +90,6 @@ services:
   #     - api
   #   command: ["./wait-for-it.sh", "api:8080", "node", "server/app.js"]
   #   # command: sh -c './wait-for-it.sh api:8080 -- npm start'
-
-
 
   # worker:
   #   restart: always
