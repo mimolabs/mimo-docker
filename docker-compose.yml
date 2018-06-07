@@ -89,8 +89,6 @@ services:
       - NODE_ENV=production
     volumes:
         - shared-volume:/etc/mimo
-    depends_on:
-      - api
     healthcheck:
         test: ["CMD", "curl", "-f", "http://api:8008/api/v1/ping.json"]
         interval: 30s
