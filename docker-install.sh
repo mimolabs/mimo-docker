@@ -76,11 +76,11 @@ check_port() {
 }
 
 kill_docker() {
-  if [ $DEBUG ] ; then 
-    docker-compose down --rmi all
-  else
-    docker-compose down
-  fi
+  # if [ $DEBUG ] ; then 
+  #   docker-compose down --rmi all
+  # else
+  # fi
+  docker-compose down >> /dev/null 2>&1
 }
 
 check_config_exists() {
