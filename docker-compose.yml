@@ -92,7 +92,7 @@ services:
         - shared-volume:/etc/mimo
     depends_on:
       - api
-    command: ["./wait-for-it.sh", "http://api:8080/api/v1/ping.json", "node", "server/app.js"]
+    command: ["./wait-for-it.sh", "api:8080", "node", "server/app.js"]
 
 
   # worker:
