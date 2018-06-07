@@ -63,7 +63,7 @@ services:
       - NGINX_PROXY_CONTAINER=nginx
     depends_on:
       - api
-    command: [ "sleep 30", "/bin/bash", "/app/start.sh" ]
+    command: [ "/bin/bash", "sleep 30", "/app/start.sh" ]
 
   api:
     restart: always
