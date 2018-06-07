@@ -87,6 +87,8 @@ services:
       - NODE_ENV=production
     volumes:
         - shared-volume:/etc/mimo
+    depends_on:
+      - api
 
   worker:
     restart: always
