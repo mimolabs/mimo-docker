@@ -347,12 +347,14 @@ update_config() {
     fi
   fi
 
-  val=`find_in_file MIMO_DOMAIN`
+  val=`find_in_file PUBLIC_IP`
   sed -i -e "s/PUBLIC_IP=${val}/PUBLIC_IP=$public_ip/g" $production_config
 
   ip=`check_dns "dashboard.${hostname}"`
   if [ "${ip}" != "${public_ip}" ] ; then 
     echo -e "\e[91m[ERROR] dashboard.${hostname} does not resolve to this host. Please update your DNS records before continuing. Your server's public IP is ${public_ip}!! \e[0m"
+    echo
+    echo -e "Once you've updated your DNS, run the installer again."
     exit 1
   fi
 
