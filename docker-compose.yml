@@ -81,7 +81,8 @@ services:
 
   dashboard:
     restart: on-failure
-    image: "ohmimo/mimo-frontend"
+    # image: "ohmimo/mimo-frontend"
+    image: "ohmimo/mimo-dash"
     env_file:
       - production.vars
       - dashboard.vars
