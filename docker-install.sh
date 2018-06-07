@@ -250,6 +250,7 @@ update_config() {
   postgres_pass=`find_in_file POSTGRES_PASSWORD`
   rails_secret=`find_in_file RAILS_SECRET_KEY`
   secret_key=`find_in_file SECRET_KEY_BASE`
+  public_ip=`curl -s ifconfig.co`
 
   cp $production_config $production_config.backup
 
@@ -345,13 +346,11 @@ update_config() {
   fi
 
   val=`find_in_file MIMO_DOMAIN`
-  public_ip=`curl -s ifconfig.co`
-
   sed -i -e "s/PUBLIC_IP=${val}/PUBLIC_IP=$public_ip/g" $production_config
 
   ip=`check_dns "dashboard.${hostname}"`
   if [ "${ip}" != "${public_ip}" ] ; then 
-    echo -e "\e[91m[ERROR] dashboard.${hostname} does not resolve to this host. Please update your DNS records before continuing.\e[0m"
+    echo -e "\e[91m[ERROR] dashboard.${hostname} does not resolve to this host. Please update your DNS records before continuing. Your public IP is ${public_ip} \e[0m"
     exit 1
   fi
 
