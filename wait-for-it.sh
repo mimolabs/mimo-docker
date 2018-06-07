@@ -6,7 +6,6 @@ hostname="$1"
 shift
 cmd="$@"
 
-echo $hostname
 cursor=.
 while true ; do
   response=$(curl --write-out %{http_code} -k --silent --output /dev/null $hostname)
