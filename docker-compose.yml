@@ -80,7 +80,7 @@ services:
         - shared-volume:/etc/mimo
 
   dashboard:
-    restart: on-failure
+    restart: always
     # image: "ohmimo/mimo-frontend"
     image: "ohmimo/mimo-dash"
     env_file:
