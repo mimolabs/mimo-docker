@@ -410,7 +410,7 @@ update_config() {
       exit 1
     fi
     cursor=$cursor.
-    echo -ne "${cursor} +\r"
+    echo -ne "${cursor}\r"
     sleep 3
   done
 
