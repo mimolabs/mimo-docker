@@ -98,7 +98,7 @@ services:
     depends_on:
       - api
 
-    command: ["./wait-for-it.sh", "http://api:8880/api/v1/ping.json", "node", "server/app.js"]
+    command: ["./wait-for-it.sh", "http://api:8080/api/v1/ping.json", "node", "server/app.js"]
     # command: ["node", "server/app.js"]
     # command: sh -c './wait-for-it.sh db:5432 -- npm start'
 
