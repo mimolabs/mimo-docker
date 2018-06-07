@@ -94,8 +94,8 @@ services:
         interval: 30s
         timeout: 1s
         retries: 5
-    # command: ["node", "server/app.js"]
-    command: sh -c './wait-for-it.sh db:5432 -- npm start'
+    command: ["node", "server/app.js"]
+    # command: sh -c './wait-for-it.sh db:5432 -- npm start'
 
 
   # worker:
