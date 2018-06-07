@@ -99,7 +99,7 @@ services:
       - api
 
     # command: ["./wait-for-it.sh", "https://api/api/v1/ping.json", "node", "server/app.js"]
-    # command: ["node", "server/app.js"]
+    command: ["node", "server/app.js"]
     # command: sh -c './wait-for-it.sh db:5432 -- npm start'
 
 
