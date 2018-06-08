@@ -395,7 +395,7 @@ update_config() {
   #   docker-compose pull && docker-compose up --force-recreate
     docker-compose up
   else
-    docker-compose up --pull
+    docker-compose down && docker-compose up --pull
   fi
 
   echo
