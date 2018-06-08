@@ -366,15 +366,15 @@ update_config() {
   ip=`check_dns "api.${hostname}"`
   if [ "${ip}" != "${public_ip}" ] ; then 
     echo -e "\e[91m[ERROR] api.${hostname} does not resolve to this host. Please update your DNS records!!.\e[0m"
-    # exit 1
+    exit 1
   fi
 
   ip=`check_dns "dashboard.${hostname}"`
   if [ "${ip}" != "${public_ip}" ] ; then 
     echo -e "\e[91m[ERROR] dashboard.${hostname} does not resolve to this host. Please update your DNS records!! Your server's public IP is ${public_ip}!! \e[0m"
     echo
-    # echo -e "Once you've updated your DNS, run the installer again."
-    # exit 1
+    echo -e "Once you've updated your DNS, run the installer again."
+    exit 1
   fi
 
   echo -n "" > api.vars
@@ -431,7 +431,7 @@ update_config() {
     sleep 3
   done
 
-  docker-compose -f docker-compose-lets-encrypt.yml up -d
+  docker-compose down && docker-compose -f docker-compose-lets-encrypt.yml up -d
 
   echo 
   echo -e "\e[38;5;42m[SUCCESS] MIMO is up and running!\e[0m"
