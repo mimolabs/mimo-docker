@@ -431,7 +431,7 @@ update_config() {
     sleep 3
   done
 
-  docker-compose -f docker-compose-lets-encrypt.yml up -d
+  # docker-compose -f docker-compose-lets-encrypt.yml up -d
 
   for i in {1..100}; do 
     response=$(curl --write-out %{http_code} -k -l --silent --output /dev/null https://api.$hostname/api/v1/ping.json)
