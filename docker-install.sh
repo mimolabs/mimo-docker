@@ -113,9 +113,15 @@ find_in_file() {
 update_config() {
 
   public_ip=`curl -s ifconfig.co`
-  echo -e "\e[38;5;42mYour public IP is ${public_ip}. Please make sure you've updated your DNS before the installation\e[0m"
-  echo 
-  echo 'Hit Ctrl-c to cancel the installation now. You can come back any time.'
+  echo -e "\e[38;5;42mYour public IP is ${public_ip}!!\e[0m"
+  # echo 
+  # read -p "Ty" new_value
+
+  # ok_dns='no'
+  # while [[ "$ok_dns" == "no" ]]
+  # do
+  #   read -p "Type ok to continue and confirm you have updated your DNS. Ctrl+C will exit: " ok_dns
+  # done
 
   local ok_config='no'
   local production_config='production.vars'
