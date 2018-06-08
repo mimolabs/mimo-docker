@@ -404,7 +404,8 @@ update_config() {
   #   docker-compose pull && docker-compose up --force-recreate
     docker-compose up
   else
-    docker-compose down; docker-compose -f docker-compose.yml -f docker-compose-lets-encrypt.yml up -d
+    docker-compose down; docker-compose -f docker-compose.yml up -d
+    docker-compose -f docker-compose-lets-encrypt.yml up -d
     # --force-recreate
   fi
 
