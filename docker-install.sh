@@ -112,6 +112,11 @@ find_in_file() {
 
 update_config() {
 
+  public_ip=`curl -s ifconfig.co`
+  echo -e "\e[38;5;42mYour public IP is ${public_ip}. Please make sure you've updated your DNS before the installation\e[0m"
+  echo 
+  echo 'Hit Ctrl-c to cancel the installation now. You can come back any time.'
+
   local ok_config='no'
   local production_config='production.vars'
   local changelog='change.log'
@@ -252,7 +257,6 @@ update_config() {
   postgres_pass=`find_in_file POSTGRES_PASSWORD`
   rails_secret=`find_in_file RAILS_SECRET_KEY`
   secret_key=`find_in_file SECRET_KEY_BASE`
-  public_ip=`curl -s ifconfig.co`
 
   cp $production_config $production_config.backup
 
@@ -350,17 +354,17 @@ update_config() {
   val=`find_in_file PUBLIC_IP`
   sed -i -e "s/PUBLIC_IP=${val}/PUBLIC_IP=$public_ip/g" $production_config
 
-  ip=`check_dns "dashboard.${hostname}"`
+  ip=`check_dns "api.${hostname}"`
   if [ "${ip}" != "${public_ip}" ] ; then 
-    echo -e "\e[91m[ERROR] dashboard.${hostname} does not resolve to this host. Please update your DNS records before continuing. Your server's public IP is ${public_ip}!! \e[0m"
-    echo
-    echo -e "Once you've updated your DNS, run the installer again."
+    echo -e "\e[91m[ERROR] api.${hostname} does not resolve to this host. Please update your DNS records!!.\e[0m"
     # exit 1
   fi
 
-  ip=`check_dns "api.${hostname}"`
+  ip=`check_dns "dashboard.${hostname}"`
   if [ "${ip}" != "${public_ip}" ] ; then 
-    echo -e "\e[91m[ERROR] api.${hostname} does not resolve to this host. Please update your DNS records before continuing.\e[0m"
+    echo -e "\e[91m[ERROR] dashboard.${hostname} does not resolve to this host. Please update your DNS records!! Your server's public IP is ${public_ip}!! \e[0m"
+    echo
+    # echo -e "Once you've updated your DNS, run the installer again."
     # exit 1
   fi
 
@@ -384,13 +388,15 @@ update_config() {
     echo "\e[91m[ERROR] You must set an email for let's encrypt! Otherwise we cannot secure your installation....\e[0m"
   fi
 
-  # if [ $DEBUG ] ; then
+  if [ $DEBUG ] ; then
+    docker-compose up --pull --force-recreate
   #   docker-compose pull && docker-compose up --force-recreate -d
-  # elif [ $FOREGROUND ] ; then
+  elif [ $FOREGROUND ] ; then
   #   docker-compose pull && docker-compose up --force-recreate
-  # else
-  docker-compose up
-  # fi
+    docker-compose up
+  else
+    docker-compose up --pull
+  fi
 
   echo
   echo -e "\e[38;2;240;143;104mStarting MIMO. Please wait while the installation completes...\e[0m"
