@@ -415,7 +415,7 @@ update_config() {
 
   cursor=.
   for i in {1..100}; do 
-    response=$(curl --write-out %{http_code} -k --silent --output /dev/null http://api.$hostname/api/v1/ping.json)
+    response=$(curl --write-out %{http_code} -k -l --silent --output /dev/null http://api.$hostname/api/v1/ping.json)
     if [ "${response}" == 200 ] ; then
       break
     fi
