@@ -107,6 +107,13 @@ If either failed, please re-install. The git installation guide can be found her
 
 https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
 
+### Install Docker Compose
+
+```
+sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+```
+
 ### Install MIMO
 
 Create a new folder for your installation and clone the official MIMO images into it:
