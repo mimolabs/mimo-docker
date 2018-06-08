@@ -434,7 +434,7 @@ update_config() {
     sleep 5
   done
 
-  docker-compose -f docker-compose-lets-encrypt.yml down && docker-compose -f docker-compose-lets-encrypt.yml up -d
+  docker-compose -f docker-compose-lets-encrypt.yml down; docker-compose -f docker-compose-lets-encrypt.yml up -d
 
   echo "Finishing up"
 
