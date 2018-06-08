@@ -355,13 +355,13 @@ update_config() {
     echo -e "\e[91m[ERROR] dashboard.${hostname} does not resolve to this host. Please update your DNS records before continuing. Your server's public IP is ${public_ip}!! \e[0m"
     echo
     echo -e "Once you've updated your DNS, run the installer again."
-    exit 1
+    # exit 1
   fi
 
   ip=`check_dns "api.${hostname}"`
   if [ "${ip}" != "${public_ip}" ] ; then 
     echo -e "\e[91m[ERROR] api.${hostname} does not resolve to this host. Please update your DNS records before continuing.\e[0m"
-    exit 1
+    # exit 1
   fi
 
   echo -n "" > api.vars
