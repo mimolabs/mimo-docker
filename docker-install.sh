@@ -431,7 +431,7 @@ update_config() {
     sleep 3
   done
 
-  docker-compose down && docker-compose -f docker-compose-lets-encrypt.yml up -d
+  docker-compose -f docker-compose-lets-encrypt.yml up -d
 
   echo 
   echo -e "\e[38;5;42m[SUCCESS] MIMO is up and running!\e[0m"
