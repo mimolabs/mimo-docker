@@ -384,13 +384,13 @@ update_config() {
     echo "\e[91m[ERROR] You must set an email for let's encrypt! Otherwise we cannot secure your installation....\e[0m"
   fi
 
-  if [ $DEBUG ] ; then
-    docker-compose pull && docker-compose up --force-recreate -d
-  elif [ $FOREGROUND ] ; then
-    docker-compose pull && docker-compose up --force-recreate
-  else
-    docker-compose up
-  fi
+  # if [ $DEBUG ] ; then
+  #   docker-compose pull && docker-compose up --force-recreate -d
+  # elif [ $FOREGROUND ] ; then
+  #   docker-compose pull && docker-compose up --force-recreate
+  # else
+  docker-compose up
+  # fi
 
   echo
   echo -e "\e[38;2;240;143;104mStarting MIMO. Please wait while the installation completes...\e[0m"
