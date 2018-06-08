@@ -328,7 +328,7 @@ update_config() {
     sed -i -e "s/RAILS_SECRET_KEY=KEY/RAILS_SECRET_KEY=$rails_secret/w $changelog" $production_config
 
     if [ -s $changelog ] ; then
-      echo "Updated RAILS SECRET"
+      # echo "Updated RAILS SECRET"
       rm $changelog
     fi
   fi
@@ -338,7 +338,7 @@ update_config() {
     sed -i -e "s/SECRET_KEY_BASE=KEY/SECRET_KEY_BASE=$secret_key/w $changelog" $production_config
 
     if [ -s $changelog ] ; then
-      echo "Updated secret keybase"
+      # echo "Updated secret keybase"
       rm $changelog
     fi
   fi
@@ -404,7 +404,6 @@ update_config() {
   echo
   echo -e "\e[38;2;240;143;104mStarting MIMO. Please wait while the installation completes...\e[0m"
   echo "If this is the first time you've installed MIMO, it may take a few minutes to generate your keys"
-  echo
 
   cursor=.
   for i in {1..100}; do 
@@ -425,16 +424,19 @@ update_config() {
   done
 
   echo 'API started, creating the SSL certificates'
+  echo
 
   docker-compose -f docker-compose-lets-encrypt.yml up -d
 
-  until $(docker-compose ps | grep -q letsencrypt); do
+  until $(docker ps | grep -q letsencrypt); do
     cursor=$cursor.
     echo -ne "${cursor}\r"
     sleep 5
   done
 
   docker-compose -f docker-compose-lets-encrypt.yml down >> /dev/null 2>&1 && docker-compose -f docker-compose-lets-encrypt.yml up -d
+
+  echo "Finishing up"
 
   for i in {1..100}; do 
     response=$(curl --write-out %{http_code} -k -l --silent --output /dev/null https://api.$hostname/api/v1/ping.json)
