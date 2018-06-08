@@ -172,7 +172,7 @@ update_config() {
 
     if [ ! -z "$admin_user" ]
     then
-      read -p "Enter your admin email, this will be your master login? [$admin_user_orig]: " new_value
+      read -p "Enter your admin email, this will be your master login? [$admin_user]: " new_value
       if [ ! -z "$new_value" ]
       then
         admin_user="$new_value"
@@ -424,13 +424,10 @@ update_config() {
     sleep 3
   done
 
-  echo 11111111111111111111111111111111111111111111111111
-  echo 11111111111111111111111111111111111111111111111111
-  echo 11111111111111111111111111111111111111111111111111
-  echo 11111111111111111111111111111111111111111111111111
-  echo 11111111111111111111111111111111111111111111111111
+  echo 'API started, creating the SSL certificates'
 
-  docker-compose -f docker-compose-lets-encrypt.yml up
+  docker-compose -f docker-compose-lets-encrypt.yml up -d
+
   docker-compose -f docker-compose-lets-encrypt.yml down 
   docker-compose -f docker-compose-lets-encrypt.yml up -d
 
