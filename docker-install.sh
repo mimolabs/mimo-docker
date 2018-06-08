@@ -27,7 +27,7 @@ check_docker () {
 check_docker_compose () {
   docker_path=`which docker-compose`
   if [ -z $docker_path ]; then
-    read  -p "Docker Compose not installed. Hit enter to install or type Ctrl+C to exit"
+    # read  -p "Docker Compose not installed. Hit enter to install or type Ctrl+C to exit"
     curl -s -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
     chmod +x /usr/local/bin/docker-compose
     echo `docker-compose --version`
@@ -404,7 +404,7 @@ update_config() {
   #   docker-compose pull && docker-compose up --force-recreate
     docker-compose up
   else
-    docker-compose up
+    docker-compose up -d
     # --force-recreate
   fi
 
@@ -415,7 +415,7 @@ update_config() {
 
   cursor=.
   for i in {1..100}; do 
-    response=$(curl --write-out %{http_code} -k --silent --output /dev/null https://api.$hostname/api/v1/ping.json)
+    response=$(curl --write-out %{http_code} -k --silent --output /dev/null http://api.$hostname/api/v1/ping.json)
     if [ "${response}" == 200 ] ; then
       break
     fi
