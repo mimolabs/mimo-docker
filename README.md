@@ -1,3 +1,13 @@
+# Installing MIMO with Docker
+
+This will install the MIMO Community Edition on a single host. It will setup the following components:
+
+- MIMO API
+- MIMO Dashboard
+- MIMO Splash Pages
+
+It will also generate SSL certificates using Let's Encrypt.
+
 ## Requirements
 
 - FQDN - a domain name - MIMO needs a fully qualified domain, like wisp.services
@@ -7,7 +17,7 @@
 ## Hardware Requirements
  
 - Singal or dual core CPU (dual core recommended)
-- 2 GB RAM minimum (with swap)
+- 2 GB RAM minimum (with swap) 4Gb is preferred!
 - 64 bit Linux compatible with Docker
 - 10 GB disk space minimum
 
@@ -116,6 +126,10 @@ sudo chmod +x /usr/local/bin/docker-compose
 
 ### Install MIMO
 
+Make sure you have your domain. You will also need your email server credentials for this installation.
+
+**If you don't enter valid email credentials, your installation will fail!!**
+
 Create a new folder for your installation and clone the official MIMO images into it:
 
 ```
@@ -129,6 +143,8 @@ cd /var/mimo
 You must enter valid SMTP credentials otherwise your MIMO installation won't work.
 
 After the installation has completed, you should receive a welcome message.
+
+**The installation can take ages.**
 
 ### Finishing Up
 
