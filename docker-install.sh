@@ -429,7 +429,9 @@ update_config() {
   echo 11111111111111111111111111111111111111111111111111
   echo 11111111111111111111111111111111111111111111111111
   echo 11111111111111111111111111111111111111111111111111
-s
+
+  docker-compose -f docker-compose-lets-encrypt.yml up
+  docker-compose -f docker-compose-lets-encrypt.yml down 
   docker-compose -f docker-compose-lets-encrypt.yml up -d
 
   for i in {1..100}; do 
