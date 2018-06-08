@@ -431,6 +431,7 @@ update_config() {
     sleep 3
   done
 
+  echo 11111111111111111111111111111111111111111111111111
   docker-compose -f docker-compose-lets-encrypt.yml up -d
 
   for i in {1..100}; do 
