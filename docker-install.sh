@@ -113,8 +113,11 @@ find_in_file() {
 update_config() {
 
   public_ip=`curl -s ifconfig.co`
-  echo -e "\e[38;5;42mYour public IP is ${public_ip}!!\e[0m"
-  # echo 
+  echo
+  echo -e "\e[38;5;42mWelcome to the \e[91mMIMO Community Edition!\e[0m \e[38;5;42mLet's get started.\e[0m"
+  echo -e "\e[38;5;42mYour public IP is ${public_ip}. You'll need this later.\e[0m"
+  echo 
+
   # read -p "Ty" new_value
 
   # ok_dns='no'
@@ -401,7 +404,7 @@ update_config() {
   #   docker-compose pull && docker-compose up --force-recreate
     docker-compose up
   else
-    docker-compose down && docker-compose up --pull
+    docker-compose down && docker-compose up --force-recreate
   fi
 
   echo
@@ -436,10 +439,6 @@ update_config() {
   echo 'You stay classy!'
   echo
 }
-
-echo
-echo -e "\e[38;5;42mWelcome to the \e[91mMIMO Community Edition!\e[0m \e[38;5;42mLet's get started.\e[0m"
-echo
 
 check_root
 check_docker
