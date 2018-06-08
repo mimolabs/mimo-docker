@@ -1,0 +1,19 @@
+version: '3'
+services:
+
+  web:
+    restart: always
+    # image: "ohmimo/dev-mimo-api:latest"
+    image: 'tutum/apache-php'
+    env_file:
+      - production.vars
+      - api.vars
+    volumes:
+        - shared-volume:/etc/mimo
+
+volumes:
+  shared-volume:
+  nginx-config:
+  nginx-certs:
+  nginx-vhosts:
+  nginx-webroot:
