@@ -428,8 +428,12 @@ update_config() {
 
   docker-compose -f docker-compose-lets-encrypt.yml up -d
 
-  docker-compose -f docker-compose-lets-encrypt.yml down 
-  docker-compose -f docker-compose-lets-encrypt.yml up -d
+  until $(docker-compose ps | grep -q letencrypt); do
+    print '.'
+    sleep 5
+  done
+
+  docker-compose -f docker-compose-lets-encrypt.yml down && docker-compose -f docker-compose-lets-encrypt.yml up -d
 
   for i in {1..100}; do 
     response=$(curl --write-out %{http_code} -k -l --silent --output /dev/null https://api.$hostname/api/v1/ping.json)
