@@ -80,7 +80,8 @@ kill_docker() {
   #   docker-compose down --rmi all
   # else
   # fi
-  docker-compose down >> /dev/null 2>&1
+  docker-compose -f docker-compose.yml down >> /dev/null 2>&1
+  docker-compose -f docker-compose-lets-encrypt.yml down >> /dev/null 2>&1
 }
 
 check_config_exists() {
@@ -117,14 +118,6 @@ update_config() {
   echo -e "\e[38;5;42mWelcome to the \e[91mMIMO Community Edition!\e[0m \e[38;5;42mLet's get started.\e[0m"
   echo -e "\e[38;5;42mYour public IP is ${public_ip}. You'll need this later.\e[0m"
   echo 
-
-  # read -p "Ty" new_value
-
-  # ok_dns='no'
-  # while [[ "$ok_dns" == "no" ]]
-  # do
-  #   read -p "Type ok to continue and confirm you have updated your DNS. Ctrl+C will exit: " ok_dns
-  # done
 
   local ok_config='no'
   local production_config='production.vars'
@@ -432,6 +425,13 @@ update_config() {
   done
 
   echo 11111111111111111111111111111111111111111111111111
+  sleep 30
+  echo 11111111111111111111111111111111111111111111111111
+  echo 11111111111111111111111111111111111111111111111111
+  echo 11111111111111111111111111111111111111111111111111
+  echo 11111111111111111111111111111111111111111111111111
+
+  docker-compose -f docker-compose-lets-encrypt.yml up -d
   docker-compose -f docker-compose-lets-encrypt.yml up -d
 
   for i in {1..100}; do 
