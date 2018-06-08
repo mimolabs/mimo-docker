@@ -433,6 +433,23 @@ update_config() {
 
   docker-compose -f docker-compose-lets-encrypt.yml up -d
 
+  for i in {1..100}; do 
+    response=$(curl --write-out %{http_code} -k -l --silent --output /dev/null https://api.$hostname/api/v1/ping.json)
+    if [ "${response}" == 200 ] ; then
+      break
+    fi
+    if [ $i == 100 ] ; then 
+      echo -e "\e[91m[ERROR] MIMO certificates did not install successfully.\e[0m"
+      echo 
+      echo "Run ./docker-logs.sh for more information and try again."
+      echo 
+      exit 1
+    fi
+    cursor=$cursor.
+    echo -ne "${cursor}\r"
+    sleep 3
+  done
+
   echo 
   echo -e "\e[38;5;42m[SUCCESS] MIMO is up and running!\e[0m"
   echo '----------------------------'
