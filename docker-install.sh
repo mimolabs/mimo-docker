@@ -434,9 +434,10 @@ update_config() {
     sleep 5
   done
 
-  docker-compose -f docker-compose-lets-encrypt.yml down; docker-compose -f docker-compose-lets-encrypt.yml up
+  echo "Finishing up, please wait while we generate your SSL certificates."
+  sleep 30
 
-  echo "Finishing up"
+  docker-compose -f docker-compose-lets-encrypt.yml down; docker-compose -f docker-compose-lets-encrypt.yml up
 
   for i in {1..100}; do 
     response=$(curl --write-out %{http_code} -k -L --silent --output /dev/null https://api.$hostname/api/v1/ping.json)
