@@ -2,6 +2,10 @@
 
 fails=0
 
+echo
+echo -e "\e[38;5;42mWelcome to the \e[91mMIMO Community Edition!\e[0m \e[38;5;42mLet's get the show on the road.\e[0m"
+echo 
+
 check_root() {
   if [[ $EUID -ne 0 ]]; then
     echo "This script must be run as root, please run sudo or log in as root first." 1>&2
@@ -114,7 +118,7 @@ find_in_file() {
 }
 
 test_application_running() {
-  fails=$fails + 1
+  fails=$(($fails + 1))
 
   until [ $fails -ge 10 ] ; do
     for i in {1..10}; do
@@ -155,10 +159,6 @@ test_application_running() {
 update_config() {
 
   public_ip=`curl -s ifconfig.co`
-  echo
-  echo -e "\e[38;5;42mWelcome to the \e[91mMIMO Community Edition!\e[0m \e[38;5;42mLet's get started.\e[0m"
-  echo -e "\e[38;5;42mYour public IP is ${public_ip}. You'll need this later.\e[0m"
-  echo 
 
   local ok_config='no'
   local production_config='production.vars'
