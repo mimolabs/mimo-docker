@@ -426,7 +426,7 @@ update_config() {
   echo 'API started, creating the SSL certificates'
   echo
 
-  docker-compose -f docker-compose-lets-encrypt.yml up 
+  docker-compose -f docker-compose-lets-encrypt.yml up  -d
 
   until $(docker ps | grep -q letsencrypt); do
     cursor=$cursor.
