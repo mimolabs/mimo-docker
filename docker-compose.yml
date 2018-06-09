@@ -51,13 +51,10 @@ services:
   api:
     restart: always
     image: "ohmimo/dev-mimo-api:latest"
-    # image: 'tutum/apache-php'
     env_file:
       - production.vars
       - api.vars
     command: bash -c "bundle exec rake production:bootstrap && bundle exec rake assets:precompile && bundle exec puma -C /myapp/config/puma.rb"
-    # command: bash -c "bundle exec rake db:create && rake db:migrate && bundle exec rake production:bootstrap && bundle exec rake assets:precompile && bundle exec puma -C /myapp/config/puma.rb"
-    # command: bash -c "bundle exec puma -C /myapp/config/puma.rb"
     depends_on:
       - redis
       - db
@@ -81,7 +78,7 @@ services:
       - db
       - nginx
     # command: ["./wait-for-it.sh", "api:8080", "node", "server/app.js"]
-    # command: sh -c './wait-for-it.sh api:8080 -- npm start'
+    command: sh -c './wait-for-it.sh api:8080 -- npm start'
 
   # worker:
   #   restart: always
