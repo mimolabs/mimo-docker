@@ -3,7 +3,7 @@
 fails=0
 
 echo
-echo -e "\e[38;5;42mWelcome to the \e[91mMIMO Community Edition!\e[0m \e[38;5;42mLet's get the show on the road.\e[0m"
+echo -e "\e[38;5;42mWelcome to the \e[91mMIMO Community Edition!\e[0m \e[38;5;42mLet's get this show on the road.\e[0m"
 echo 
 
 check_root() {
