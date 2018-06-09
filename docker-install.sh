@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+fails=0
+
 check_root() {
   if [[ $EUID -ne 0 ]]; then
     echo "This script must be run as root, please run sudo or log in as root first." 1>&2
@@ -111,6 +113,46 @@ find_in_file() {
   echo "$val"
 }
 
+test_application_running() {
+  fails=$((fails + 1))
+
+  for i in {1..10}; do
+    if [ $i -gt 1 ] ; then 
+      echo "Retrying ($fails) "
+    fi
+    response=$(curl --write-out %{http_code} -k -L --silent --output /dev/null https://api.${1}/api/v1/ping.json)
+    if [ "${response}" == 200 ] ; then
+      # break
+      break
+    fi
+    if [ $i == 10 ] ; then 
+      if [ $fails == 10 ] ; then 
+        echo -e "\e[91m[ERROR] MIMO certificates did not install successfully, exiting.\e[0m"
+        exit 1
+      else 
+        echo -e "\e[91m[ERROR] MIMO certificates did not install successfully, trying again\e[0m"
+        docker-compose -f docker-compose-lets-encrypt.yml down; docker-compose -f docker-compose-lets-encrypt.yml up -d
+        test_application_running ${1}
+      fi
+    fi
+    cursor=$cursor.
+    echo -ne "${cursor}\r"
+    sleep 3
+  done
+  
+  echo 
+  echo -e "\e[38;5;42m[SUCCESS] MIMO is up and running!\e[0m"
+  echo '----------------------------'
+  echo
+  echo "We've emailed an email to the admin user with instructions on how to complete the installation."
+  echo
+  echo "If the email doesn't arrive, please check you entered valid SMTP credentials."
+  echo 
+  echo 'You stay classy!'
+  echo
+}
+
+test_application_running 'ctapp.io'
 update_config() {
 
   public_ip=`curl -s ifconfig.co`
@@ -412,7 +454,7 @@ update_config() {
       break
     fi
     if [ $i == 100 ] ; then 
-      echo -e "\e[91m[ERROR] MIMO did not complete successfully.\e[0m"
+      echo -e "\e[91m[ERROR] MIMO installation did not complete successfully.\e[0m"
       echo 
       echo "Run ./docker-logs.sh for more information and try again."
       echo 
@@ -428,59 +470,14 @@ update_config() {
 
   docker-compose -f docker-compose-lets-encrypt.yml up  -d
 
+  ### Wait for Docker to load let's encrypt before continuing...
   until $(docker ps | grep -q letsencrypt); do
     cursor=$cursor.
     echo -ne "${cursor}\r"
     sleep 5
   done
 
-  echo "Finishing up, please wait while we generate your SSL certificates."
-  sleep 30
-
-  # docker-compose -f docker-compose-lets-encrypt.yml down; docker-compose -f docker-compose-lets-encrypt.yml up -d
-
-  # for i in {1..100}; do 
-  #   response=$(curl --write-out %{http_code} -k -L --silent --output /dev/null https://api.$hostname/api/v1/ping.json)
-  #   if [ "${response}" == 200 ] ; then
-  #     break
-  #   fi
-  #   if [ $i == 100 ] ; then 
-  #     echo -e "\e[91m[ERROR] MIMO certificates did not install successfully.\e[0m"
-  #     echo 
-  #     echo "Run ./docker-logs.sh for more information and try again."
-  #     echo 
-  #     exit 1
-  #   fi
-  #   cursor=$cursor.
-  #   echo -ne "${cursor}\r"
-  #   sleep 3
-  # done
-
-  # for i in {1..100}; do 
-  #   response=$(curl --write-out %{http_code} -k -L --silent --output /dev/null https://api.$hostname/api/v1/ping.json)
-  #   if [ "${response}" == 200 ] ; then
-  #     break
-  #   fi
-  #   if [ $i == 100 ] ; then 
-  #     echo -e "\e[91m[ERROR] MIMO certificates did not install successfully.\e[0m"
-  #     echo 
-  #     echo "Run ./docker-logs.sh for more information and try again."
-  #     echo 
-  #     exit 1
-  #   fi
-  #   cursor=$cursor.
-  #   echo -ne "${cursor}\r"
-  #   sleep 3
-  # done
-
-  echo 
-  echo -e "\e[38;5;42m[SUCCESS] MIMO is up and running!\e[0m"
-  echo '----------------------------'
-  echo
-  echo "An email has been sent to ${admin_user}. The email contains a magic link that you need to complete the installation."
-  echo 
-  echo 'You stay classy!'
-  echo
+  test_application_running $hostname
 }
 
 check_root
