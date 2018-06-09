@@ -77,8 +77,6 @@ services:
       - redis
       - db
       - nginx
-    # command: ["./wait-for-it.sh", "api:8080", "node", "server/app.js"]
-    command: sh -c './wait-for-it.sh api:8080 -- npm start'
 
   # worker:
   #   restart: always
