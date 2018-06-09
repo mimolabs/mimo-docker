@@ -114,42 +114,42 @@ find_in_file() {
 }
 
 test_application_running() {
-  fails=$((fails + 1))
+  fails=$fails + 1
 
-  for i in {1..10}; do
-    if [ $i -gt 1 ] ; then 
-      echo "Retrying ($fails) "
-    fi
-    response=$(curl --write-out %{http_code} -k -L --silent --output /dev/null https://api.${1}/api/v1/ping.json)
-    if [ "${response}" == 200 ] ; then
-      # break
-      break
-    fi
-    if [ $i == 10 ] ; then 
-      if [ $fails == 10 ] ; then 
-        echo -e "\e[91m[ERROR] MIMO certificates did not install successfully, exiting.\e[0m"
-        exit 1
-      else 
+  until [ $fails -ge 10 ] ; do
+    for i in {1..10}; do
+      if [ $i -gt 1 ] ; then 
+        echo "Retrying ($fails) "
+      fi
+      response=$(curl --write-out %{http_code} -k -L --silent --output /dev/null https://api.${1}/api/v1/ping.json)
+      if [ "${response}" == 200 ] ; then
+        break
+      fi
+      if [ $i == 10 ] ; then 
+        # docker exec nginx-letsencrypt /app/force_renew
         echo -e "\e[91m[ERROR] MIMO certificates did not install successfully, trying again\e[0m"
         docker-compose -f docker-compose-lets-encrypt.yml down; docker-compose -f docker-compose-lets-encrypt.yml up -d
         test_application_running ${1}
       fi
-    fi
-    cursor=$cursor.
-    echo -ne "${cursor}\r"
-    sleep 3
+      cursor=$cursor.
+      echo -ne "${cursor}\r"
+      sleep 3
+    done
+
+    echo 
+    echo -e "\e[38;5;42m[SUCCESS] MIMO is up and running!\e[0m"
+    echo '----------------------------'
+    echo
+    echo "We've emailed an email to the admin user with instructions on how to complete the installation."
+    echo
+    echo "If the email doesn't arrive, please check you entered valid SMTP credentials."
+    echo 
+    echo 'You stay classy!'
+    echo
+    exit 0
   done
-  
-  echo 
-  echo -e "\e[38;5;42m[SUCCESS] MIMO is up and running!\e[0m"
-  echo '----------------------------'
-  echo
-  echo "We've emailed an email to the admin user with instructions on how to complete the installation."
-  echo
-  echo "If the email doesn't arrive, please check you entered valid SMTP credentials."
-  echo 
-  echo 'You stay classy!'
-  echo
+
+  echo -e "\e[91m[ERROR] MIMO certificates did not install successfully, exiting.\e[0m"
 }
 
 test_application_running 'ctapp.io'
