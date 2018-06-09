@@ -48,22 +48,6 @@ services:
       - nginx
     command: -notify-sighup nginx -watch -wait 5s:30s /etc/docker-gen/templates/nginx.tmpl /etc/nginx/conf.d/default.conf
 
-  # letsencrypt:
-  #   restart: always
-  #   image: jrcs/letsencrypt-nginx-proxy-companion
-  #   container_name: letsencrypt
-  #   volumes:
-  #     - 'nginx-config:/etc/nginx/conf.d'
-  #     - 'nginx-certs:/etc/nginx/certs'
-  #     - 'nginx-vhosts:/etc/nginx/vhost.d'
-  #     - 'nginx-webroot:/usr/share/nginx/html'
-  #     - '/var/run/docker.sock:/var/run/docker.sock:ro'
-  #   environment:
-  #     - NGINX_DOCKER_GEN_CONTAINER=nginx-docker-gen
-  #     - NGINX_PROXY_CONTAINER=nginx
-  #   depends_on:
-  #     - nginx-gen
-
   api:
     restart: always
     image: "ohmimo/dev-mimo-api:latest"
@@ -81,21 +65,23 @@ services:
     volumes:
         - shared-volume:/etc/mimo
 
-  # dashboard:
-  #   restart: always
-  #   # image: "ohmimo/mimo-frontend"
-  #   image: "ohmimo/mimo-dash"
-  #   env_file:
-  #     - production.vars
-  #     - dashboard.vars
-  #   environment:
-  #     - NODE_ENV=production
-  #   volumes:
-  #       - shared-volume:/etc/mimo
-  #   depends_on:
-  #     - api
-  #   command: ["./wait-for-it.sh", "api:8080", "node", "server/app.js"]
-  #   # command: sh -c './wait-for-it.sh api:8080 -- npm start'
+  dashboard:
+    restart: always
+    # image: "ohmimo/mimo-frontend"
+    image: "ohmimo/mimo-dash"
+    env_file:
+      - production.vars
+      - dashboard.vars
+    environment:
+      - NODE_ENV=production
+    volumes:
+        - shared-volume:/etc/mimo
+    depends_on:
+      - redis
+      - db
+      - nginx
+    # command: ["./wait-for-it.sh", "api:8080", "node", "server/app.js"]
+    # command: sh -c './wait-for-it.sh api:8080 -- npm start'
 
   # worker:
   #   restart: always
