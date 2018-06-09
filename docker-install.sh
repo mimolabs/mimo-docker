@@ -152,7 +152,6 @@ test_application_running() {
   echo -e "\e[91m[ERROR] MIMO certificates did not install successfully, exiting.\e[0m"
 }
 
-test_application_running 'ctapp.io'
 update_config() {
 
   public_ip=`curl -s ifconfig.co`
