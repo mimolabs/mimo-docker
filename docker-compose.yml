@@ -50,7 +50,7 @@ services:
 
   api:
     restart: always
-    image: "ohmimo/dev-mimo-api:latest"
+    image: "ohmimo/mimo-api:latest"
     env_file:
       - production.vars
       - api.vars
@@ -64,8 +64,7 @@ services:
 
   dashboard:
     restart: always
-    # image: "ohmimo/mimo-frontend"
-    image: "ohmimo/mimo-dash"
+    image: "ohmimo/mimo-frontend"
     env_file:
       - production.vars
       - dashboard.vars
@@ -79,21 +78,21 @@ services:
       - nginx
     command: bash -c "grunt build && node server/app.js"
 
-  # worker:
-  #   restart: always
-  #   image: "ohmimo/mimo-worker"
-  #   env_file:
-  #     - production.vars
-  #   environment:
-  #     - RAILS_LOG_TO_STDOUT=true
-  #     - RAILS_SERVE_STATIC_FILES=true
-  #     - REDIS_HOST=redis
-  #   command: bash -c "sidekiq"
-  #   volumes:
-  #       - shared-volume:/etc/mimo
-  #   depends_on:
-  #     - db
-  #     - redis
+  worker:
+    restart: always
+    image: "ohmimo/mimo-worker"
+    env_file:
+      - production.vars
+    environment:
+      # - RAILS_LOG_TO_STDOUT=true
+      # - RAILS_SERVE_STATIC_FILES=true
+      - REDIS_HOST=redis
+    command: bash -c "sidekiq"
+    volumes:
+        - shared-volume:/etc/mimo
+    depends_on:
+      - db
+      - redis
 
 volumes:
   shared-volume:
