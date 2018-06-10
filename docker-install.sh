@@ -122,9 +122,9 @@ test_application_running() {
 
   until [ $fails -ge 10 ] ; do
     for i in {1..10}; do
-      if [ $i -gt 1 ] ; then 
-        echo "Retrying ($fails) "
-      fi
+      # if [ $i -gt 1 ] ; then 
+      #   echo "Retrying ($fails) "
+      # fi
       response=$(curl --write-out %{http_code} -k -L --silent --output /dev/null https://api.${1}/api/v1/ping.json)
       if [ "${response}" == 200 ] ; then
         break
@@ -438,7 +438,7 @@ update_config() {
   #   docker-compose pull && docker-compose up --force-recreate
     docker-compose up
   else
-    docker-compose down; docker-compose -f docker-compose.yml up -d
+    docker-compose down; docker-compose -f docker-compose.yml pull && docker-compose -f docker-compose.yml up -d
     # --force-recreate
   fi
 
