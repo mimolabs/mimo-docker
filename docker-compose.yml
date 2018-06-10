@@ -77,7 +77,7 @@ services:
       - redis
       - db
       - nginx
-    command: bash -c "grunt build"
+    command: bash -c "grunt build && node server/app.js"
 
   # worker:
   #   restart: always
