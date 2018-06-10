@@ -54,7 +54,7 @@ services:
     env_file:
       - production.vars
       - api.vars
-    command: bash -c "bundle exec rake db:setup && bundle exec rake db:migrate && bundle exec rake production:bootstrap && bundle exec rake assets:precompile && bundle exec puma -C /myapp/config/puma.rb"
+    command: bash -c "bundle exec rake db:create && bundle exec rake db:migrate && bundle exec rake production:bootstrap && bundle exec rake assets:precompile && bundle exec puma -C /myapp/config/puma.rb"
     depends_on:
       - redis
       - db
