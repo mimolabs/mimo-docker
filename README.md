@@ -46,12 +46,14 @@ Add the following A-records to your DNS records:
 - dashboard
 - splash
 
-For example, if your public IP address is 1.2.3.4 and your chosen domain is wisp.services you need the following records:
+Before you start the installation (after you created a server), you must update your DNS. For example, if your public IP address is 1.2.3.4 and your chosen domain is wisp.services you need the following records:
 
-- api.wisp.services - 1.2.3.4
-- admin.wisp.services - 1.2.3.4
-- dashboard.wisp.services - 1.2.3.4
-- splash.wisp.services - 1.2.3.4
+```
+api.wisp.services - 1.2.3.4
+admin.wisp.services - 1.2.3.4
+dashboard.wisp.services - 1.2.3.4
+splash.wisp.services - 1.2.3.4
+```
 
 Make sure these resolve *before* you start the installation.
 
@@ -77,7 +79,11 @@ We do not recommend using Gmail's SMTP server or your own one. The ones above ar
 
 Your MIMO installation will be secured using [Let's Encrypt](https://letsencrypt.org/) certificates. During the installation process, you will need to enter an email address for the Let's Encrypt service. This must be a functioning email.
 
-## Login to your server
+## Install MIMO!
+
+Follow the instructions below to get the MIMO Community Edition installed.
+
+### Login to your server
 
 bla bla bla
 
@@ -90,6 +96,8 @@ ssh root@ip-address
 If you're using [Digital Ocean](https://m.do.co/c/8504487cbb3a), you will need to update your password.
 
 ### Install Docker and Git
+
+Run the following to install Docker on your server.
 
 ```
 wget -qO- https://get.docker.com/ | sh
@@ -122,8 +130,6 @@ https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
 Make sure you have your domain. You will also need your email server credentials for this installation.
 
 **If you don't enter valid email credentials, your installation will fail!!**
-
-Create a new folder for your installation and clone the official MIMO images into it:
 
 ```
 sudo -s
