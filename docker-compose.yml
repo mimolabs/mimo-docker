@@ -57,8 +57,8 @@ services:
       - production.vars
       - api.vars
     command: bash -c "bundle exec rake db:create && bundle exec rake db:migrate && bundle exec rake production:bootstrap && bundle exec rake assets:precompile && bundle exec puma -C /myapp/config/puma.rb"
-    logging:
-      driver: syslog
+    # logging:
+    #   driver: syslog
     depends_on:
       - redis
       - db
@@ -74,8 +74,8 @@ services:
       - dashboard.vars
     environment:
       - NODE_ENV=production
-    logging:
-      driver: syslog
+    # logging:
+    #   driver: syslog
     volumes:
         - shared-volume:/etc/mimo
     depends_on:
