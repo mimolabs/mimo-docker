@@ -76,7 +76,7 @@ services:
       - redis
       - db
       - nginx
-    command: bash -c "grunt build && node server/app.js"
+    command: ["./wait-for-it.sh", "grunt build", "node", "server/app.js"]
 
   worker:
     restart: always
