@@ -76,7 +76,7 @@ services:
     depends_on:
       - api
     entrypoint: ["./wait-for-it.sh"]
-    command: ["grunt build", "node" "./dist/server/app.js"]
+    command: ["grunt build", "node", "./dist/server/app.js"]
 
   # splash:
   #   restart: always
