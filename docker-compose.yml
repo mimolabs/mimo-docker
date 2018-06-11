@@ -64,7 +64,8 @@ services:
 
   dashboard:
     restart: always
-    image: "ohmimo/mimo-frontend"
+    # image: "ohmimo/mimo-frontend"
+    image: "ohmimo/mimo-dash"
     env_file:
       - production.vars
       - dashboard.vars
@@ -74,7 +75,8 @@ services:
         - shared-volume:/etc/mimo
     depends_on:
       - api
-    command: ["./wait-for-it.sh", "grunt build && node ./dist/server/app.js"]
+    entrypoint: ["./wait-for-it.sh", "ls"]
+    command: ["grunt build", "node" "./dist/server/app.js"]
 
   # splash:
   #   restart: always
