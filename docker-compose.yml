@@ -77,20 +77,19 @@ services:
       - api
     command: bash -c "cd /opt/app && ./wait-for-it.sh && grunt build && node /opt/app/dist/server/app.js"
 
-  splash:
-    restart: always
-    image: "ohmimo/mimo-splash"
-    env_file:
-      # - production.vars
-      - dashboard.vars
-    environment:
-      - NODE_ENV=production
-    volumes:
-        - shared-volume:/etc/mimo
-    depends_on:
-      - api
-    entrypoint: ["./wait-for-it.sh"]
-    command: bash -c "grunt build && node /opt/app/dist/server/app.js"
+  # splash:
+  #   restart: always
+  #   image: "ohmimo/mimo-splash"
+  #   env_file:
+  #     # - production.vars
+  #     - dashboard.vars
+  #   environment:
+  #     - NODE_ENV=production
+  #   volumes:
+  #       - shared-volume:/etc/mimo
+  #   depends_on:
+  #     - api
+  #   command: bash -c "cd /opt/app && ./wait-for-it.sh && grunt build && node /opt/app/dist/server/app.js"
 
   worker:
     restart: always
