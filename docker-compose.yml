@@ -73,7 +73,7 @@ services:
     volumes:
         - shared-volume:/etc/mimo
     depends_on:
-      api
+      - api
     command: ["./wait-for-it.sh", "grunt build", "node", "server/app.js"]
 
   splash:
@@ -87,7 +87,7 @@ services:
     volumes:
         - shared-volume:/etc/mimo
     depends_on:
-      api
+      - api
     command: ["./wait-for-it.sh", "grunt build", "node", "server/app.js"]
 
   worker:
