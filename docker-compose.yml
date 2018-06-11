@@ -74,7 +74,7 @@ services:
         - shared-volume:/etc/mimo
     depends_on:
       - api
-    command: ["./wait-for-it.sh", "grunt build", "node", "server/app.js"]
+    command: ["/opt/app/wait-for-it.sh", "grunt build", "node", "server/app.js"]
 
   splash:
     restart: always
