@@ -73,9 +73,21 @@ services:
     volumes:
         - shared-volume:/etc/mimo
     depends_on:
-      - redis
-      - db
-      - nginx
+      api
+    command: ["./wait-for-it.sh", "grunt build", "node", "server/app.js"]
+
+  splash:
+    restart: always
+    image: "ohmimo/mimo-splash"
+    env_file:
+      # - production.vars
+      - dashboard.vars
+    environment:
+      - NODE_ENV=production
+    volumes:
+        - shared-volume:/etc/mimo
+    depends_on:
+      api
     command: ["./wait-for-it.sh", "grunt build", "node", "server/app.js"]
 
   worker:
