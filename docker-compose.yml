@@ -26,8 +26,8 @@ services:
      - "443:443"
     depends_on:
       - db
-    logging:
-      driver: syslog
+    # logging:
+    #   driver: syslog
     volumes:
       - 'nginx-config:/etc/nginx/conf.d'
       - 'nginx-certs:/etc/nginx/certs'
