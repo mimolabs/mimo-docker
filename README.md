@@ -129,8 +129,6 @@ Make sure you have your domain. You will also need your email server credentials
 
 **If you don't enter valid email credentials, your installation will fail!!**
 
-Create a new folder for your installation and clone the official MIMO images into it:
-
 ```
 sudo -s
 mkdir /var/mimo
