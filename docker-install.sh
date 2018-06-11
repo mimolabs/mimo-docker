@@ -4,6 +4,7 @@ fails=0
 
 echo
 echo -e "\e[38;5;42mWelcome to the \e[91mMIMO Community Edition!\e[0m \e[38;5;42mLet's get this show on the road.\e[0m"
+echo "Checking installation, please wait a moment."
 echo 
 
 check_root() {
@@ -131,7 +132,7 @@ test_application_running() {
       fi
       if [ $i == 10 ] ; then 
         # docker exec nginx-letsencrypt /app/force_renew
-        echo -e "\e[91m[ERROR] MIMO certificates did not install successfully, trying again\e[0m"
+        echo -e "Trying certificate generation again\e[0m"
         docker-compose -f docker-compose-lets-encrypt.yml down; docker-compose -f docker-compose-lets-encrypt.yml up -d
         test_application_running ${1}
       fi
