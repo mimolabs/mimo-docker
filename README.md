@@ -77,7 +77,11 @@ We do not recommend using Gmail's SMTP server or your own one. The ones above ar
 
 Your MIMO installation will be secured using [Let's Encrypt](https://letsencrypt.org/) certificates. During the installation process, you will need to enter an email address for the Let's Encrypt service. This must be a functioning email.
 
-## Login to your server
+## Install MIMO!
+
+Follow the instructions below to get the MIMO Community Edition installed.
+
+### Login to your server
 
 bla bla bla
 
@@ -90,6 +94,8 @@ ssh root@ip-address
 If you're using [Digital Ocean](https://m.do.co/c/8504487cbb3a), you will need to update your password.
 
 ### Install Docker and Git
+
+Run the following to install Docker on your server.
 
 ```
 wget -qO- https://get.docker.com/ | sh
