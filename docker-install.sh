@@ -214,7 +214,7 @@ update_config() {
 
     if [ ! -z "$admin_user" ]
     then
-      read -p "Enter your admin email, this will be your master login? [$admin_user]: " new_value
+      read -p "enter your email address [$admin_user]: " new_value
       if [ ! -z "$new_value" ]
       then
         admin_user="$new_value"
@@ -233,7 +233,7 @@ update_config() {
       if [ "$letsencrypt_email" == "email@example.com" ] ; then 
         letsencrypt_email=$admin_user
       fi
-      read -p "enter your let's encrypt email [$letsencrypt_email]: " new_value
+      read -p "enter an email for Let's Encrypt [$letsencrypt_email]: " new_value
       if [ ! -z "$new_value" ]
       then
         letsencrypt_email="$new_value"
