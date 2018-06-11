@@ -75,7 +75,7 @@ services:
         - shared-volume:/etc/mimo
     depends_on:
       - api
-    command: bash -c "cd /opt/app && ./wait-for-it.sh && grunt build && ls && ls ./dist/ && node /opt/app/dist/server/app.js"]
+    command: bash -c "cd /opt/app && ./wait-for-it.sh && grunt build && ls ./dist/server && node /opt/app/dist/server/app.js"]
 
   # splash:
   #   restart: always
