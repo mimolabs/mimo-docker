@@ -76,7 +76,7 @@ services:
     depends_on:
       - api
     entrypoint: ["./wait-for-it.sh"]
-    command: ["grunt build", "node", "./dist/server/app.js"]
+    command: ["grunt build", "node ./dist/server/app.js"]
 
   # splash:
   #   restart: always
@@ -90,7 +90,8 @@ services:
   #       - shared-volume:/etc/mimo
   #   depends_on:
   #     - api
-  # command: ["./wait-for-it.sh", "grunt build && node ./dist/server/app.js"]
+  # entrypoint: ["./wait-for-it.sh"]
+  # command: ["grunt build", "node", "./dist/server/app.js"]
 
   worker:
     restart: always
