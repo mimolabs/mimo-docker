@@ -79,9 +79,8 @@ services:
   splash:
     restart: always
     image: "ohmimo/mimo-splash"
-    #env_file:
-    #  # - production.vars
-    #  # - dashboard.vars
+    env_file:
+     - splash.vars
     environment:
       - NODE_ENV=production
     volumes:

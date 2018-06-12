@@ -106,6 +106,11 @@ check_config_exists() {
   if [ ! -f $FILE ]; then
     echo -n '' > $FILE
   fi
+
+  FILE='splash.vars'
+  if [ ! -f $FILE ]; then
+    echo -n '' > $FILE
+  fi
 }
 
 check_ports() {
@@ -415,8 +420,12 @@ update_config() {
   echo -n "" > api.vars
   echo -n "" > dashboard.vars
 
+  ### We should not do this since it will overwrite the custom vars
+  echo -n "" > splash.vars
+
   echo "VIRTUAL_HOST=api.${hostname},admin.${hostname}" >> api.vars
   echo "VIRTUAL_HOST=dashboard.${hostname}" >> dashboard.vars
+  echo "VIRTUAL_HOST=splash.${hostname}" >> splash.vars
 
   if [ $letsencrypt_email ] ; then
     echo "LETSENCRYPT_HOST=api.${hostname},admin.${hostname}" >> api.vars
@@ -431,6 +440,13 @@ update_config() {
   else
     echo "\e[91m[ERROR] You must set an email for let's encrypt! Otherwise we cannot secure your installation....\e[0m"
   fi
+
+  echo "FACEBOOK_CLIENT_ID=" >> splash.vars
+  echo "FACEBOOK_CLIENT_SECRET=" >> splash.vars
+  echo "GOOGLE_CLIENT_ID=" >> splash.vars
+  echo "GOOGLE_CLIENT_SECRET=" >> splash.vars
+  echo "TWITTER_CLIENT_ID=" >> splash.vars
+  echo "TWITTER_CLIENT_SECRET=" >> splash.vars
 
   if [ $DEBUG ] ; then
     docker-compose up --pull --force-recreate
