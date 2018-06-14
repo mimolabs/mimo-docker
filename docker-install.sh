@@ -415,7 +415,7 @@ update_config() {
   sed -i -e "s/PUBLIC_IP=${val}/PUBLIC_IP=$public_ip/g" $production_config
 
   ip=`check_dns "api.${hostname}"`
-  if [ "${ip}" != "${public_ip}" ] && [ "$cloudflare" == "" ] ; then 
+  if [ "${ip}" != "${public_ip}" ] && [ "$cloudflare" == "no" ] ; then 
     echo -e "\e[91m[ERROR] api.${hostname} does not resolve to this host. Please update your DNS records!!.\e[0m"
     echo "If you're using Cloudflare, please disabled their proxy for installation. You can enable it again after."
     exit 1
