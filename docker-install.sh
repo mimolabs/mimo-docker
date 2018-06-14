@@ -420,10 +420,12 @@ update_config() {
   echo $cloudflare
   echo $cloudflare
   echo $cloudflare == "no"
-  if [ "${ip}" != "${public_ip}" ] && [ "$cloudflare" != "no" ] ; then 
-    echo -e "\e[91m[ERROR] api.${hostname} does not resolve to this host. Please update your DNS records!!.\e[0m"
-    echo "If you're using Cloudflare, please disabled their proxy for installation. You can enable it again after."
-    exit 1
+  if [ "${ip}" != "${public_ip}" ] ; then 
+    if [ "$cloudflare" == "no" ] ; then 
+      echo -e "\e[91m[ERROR] api.${hostname} does not resolve to this host. Please update your DNS records!!.\e[0m"
+      echo "If you're using Cloudflare, please disabled their proxy for installation. You can enable it again after."
+      exit 1
+    fi
   fi
 
   ip=`check_dns "dashboard.${hostname}"`
