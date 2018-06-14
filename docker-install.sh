@@ -195,6 +195,8 @@ update_config() {
 
   letsencrypt_email=`find_in_file LETSENCRYPT_EMAIL`
   letsencrypt_email_orig=$letsencrypt_email
+  
+  cloudflare='no'
 
   while [[ "$ok_config" == "no" ]]
   do
@@ -286,6 +288,15 @@ update_config() {
       if [ ! -z "$new_value" ]
       then
         smtp_pass="$new_value"
+      fi
+    fi
+
+    if [ ! -z "$cloudflare" ]
+    then
+      read -p "are you using Cloudflare? [$cloudflare]: " new_value
+      if [ ! -z "$new_value" ]
+      then
+        cloudflare="$new_value"
       fi
     fi
 
@@ -404,7 +415,7 @@ update_config() {
   sed -i -e "s/PUBLIC_IP=${val}/PUBLIC_IP=$public_ip/g" $production_config
 
   ip=`check_dns "api.${hostname}"`
-  if [ "${ip}" != "${public_ip}" ] ; then 
+  if [ "${ip}" != "${public_ip}" && "$cloudflare" == "no" ] ; then 
     echo -e "\e[91m[ERROR] api.${hostname} does not resolve to this host. Please update your DNS records!!.\e[0m"
     echo "If you're using Cloudflare, please disabled their proxy for installation. You can enable it again after."
     exit 1
