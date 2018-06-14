@@ -406,6 +406,7 @@ update_config() {
   ip=`check_dns "api.${hostname}"`
   if [ "${ip}" != "${public_ip}" ] ; then 
     echo -e "\e[91m[ERROR] api.${hostname} does not resolve to this host. Please update your DNS records!!.\e[0m"
+    echo "If you're using Cloudflare, please disabled their proxy for installation."
     exit 1
   fi
 
@@ -430,8 +431,11 @@ update_config() {
   if [ $letsencrypt_email ] ; then
     echo "LETSENCRYPT_HOST=api.${hostname},admin.${hostname}" >> api.vars
     echo "LETSENCRYPT_HOST=dashboard.${hostname}" >> dashboard.vars
-    # echo "LETSENCRYPT_TEST=true" >> api.vars
-    # echo "LETSENCRYPT_TEST=true" >> dashboard.vars
+    if [ $TEST ] ; then
+      echo "Enabling Let\'s Encrypt Test Mode"
+      echo "LETSENCRYPT_TEST=true" >> api.vars
+      echo "LETSENCRYPT_TEST=true" >> dashboard.vars
+    fi
     sed -i -e "s/LETSENCRYPT_EMAIL=${letsencrypt_email_orig}/LETSENCRYPT_EMAIL=$letsencrypt_email/w $changelog" $production_config
     if [ -s $changelog ] ; then
       echo "Added ${letsencrypt_email} as let's encrypt user"
