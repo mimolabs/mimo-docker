@@ -430,8 +430,8 @@ update_config() {
   if [ $letsencrypt_email ] ; then
     echo "LETSENCRYPT_HOST=api.${hostname},admin.${hostname}" >> api.vars
     echo "LETSENCRYPT_HOST=dashboard.${hostname}" >> dashboard.vars
-    echo "LETSENCRYPT_TEST=true" >> api.vars
-    echo "LETSENCRYPT_TEST=true" >> dashboard.vars
+    # echo "LETSENCRYPT_TEST=true" >> api.vars
+    # echo "LETSENCRYPT_TEST=true" >> dashboard.vars
     sed -i -e "s/LETSENCRYPT_EMAIL=${letsencrypt_email_orig}/LETSENCRYPT_EMAIL=$letsencrypt_email/w $changelog" $production_config
     if [ -s $changelog ] ; then
       echo "Added ${letsencrypt_email} as let's encrypt user"
