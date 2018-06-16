@@ -106,6 +106,11 @@ check_config_exists() {
   if [ ! -f $FILE ]; then
     echo -n '' > $FILE
   fi
+
+  FILE='splash.vars'
+  if [ ! -f $FILE ]; then
+    echo -n '' > $FILE
+  fi
 }
 
 check_ports() {
@@ -190,6 +195,8 @@ update_config() {
 
   letsencrypt_email=`find_in_file LETSENCRYPT_EMAIL`
   letsencrypt_email_orig=$letsencrypt_email
+  
+  cloudflare='no'
 
   while [[ "$ok_config" == "no" ]]
   do
@@ -281,6 +288,15 @@ update_config() {
       if [ ! -z "$new_value" ]
       then
         smtp_pass="$new_value"
+      fi
+    fi
+
+    if [ ! -z "$cloudflare" ]
+    then
+      read -p "are you using Cloudflare? [$cloudflare]: " new_value
+      if [ ! -z "$new_value" ]
+      then
+        cloudflare="$new_value"
       fi
     fi
 
@@ -398,31 +414,41 @@ update_config() {
   val=`find_in_file PUBLIC_IP`
   sed -i -e "s/PUBLIC_IP=${val}/PUBLIC_IP=$public_ip/g" $production_config
 
-  ip=`check_dns "api.${hostname}"`
-  if [ "${ip}" != "${public_ip}" ] ; then 
-    echo -e "\e[91m[ERROR] api.${hostname} does not resolve to this host. Please update your DNS records!!.\e[0m"
-    exit 1
-  fi
+  if [ "$cloudflare" == "no" ]  ; then
+    ip=`check_dns "api.${hostname}"`
+    if [ "${ip}" != "${public_ip}" ] ; then 
+      echo -e "\e[91m[ERROR] api.${hostname} does not resolve to this host. Please update your DNS records!!.\e[0m"
+      echo "If you're using Cloudflare, please disabled their proxy for installation. You can enable it again after."
+      exit 1
+    fi
 
-  ip=`check_dns "dashboard.${hostname}"`
-  if [ "${ip}" != "${public_ip}" ] ; then 
-    echo -e "\e[91m[ERROR] dashboard.${hostname} does not resolve to this host. Please update your DNS records!! Your server's public IP is ${public_ip}!! \e[0m"
-    echo
-    echo -e "Once you've updated your DNS, run the installer again."
-    exit 1
+    ip=`check_dns "dashboard.${hostname}"`
+    if [ "${ip}" != "${public_ip}" ] ; then 
+      echo -e "\e[91m[ERROR] dashboard.${hostname} does not resolve to this host. Please update your DNS records!! Your server's public IP is ${public_ip}!! \e[0m"
+      echo
+      echo -e "Once you've updated your DNS, run the installer again."
+      exit 1
+    fi
   fi
 
   echo -n "" > api.vars
   echo -n "" > dashboard.vars
 
+  ### We should not do this since it will overwrite the custom vars
+  echo -n "" > splash.vars
+
   echo "VIRTUAL_HOST=api.${hostname},admin.${hostname}" >> api.vars
   echo "VIRTUAL_HOST=dashboard.${hostname}" >> dashboard.vars
+  echo "VIRTUAL_HOST=splash.${hostname}" >> splash.vars
 
   if [ $letsencrypt_email ] ; then
     echo "LETSENCRYPT_HOST=api.${hostname},admin.${hostname}" >> api.vars
     echo "LETSENCRYPT_HOST=dashboard.${hostname}" >> dashboard.vars
-    echo "LETSENCRYPT_TEST=true" >> api.vars
-    echo "LETSENCRYPT_TEST=true" >> dashboard.vars
+    if [ $TEST ] ; then
+      echo "Enabling Let\'s Encrypt Test Mode"
+      echo "LETSENCRYPT_TEST=true" >> api.vars
+      echo "LETSENCRYPT_TEST=true" >> dashboard.vars
+    fi
     sed -i -e "s/LETSENCRYPT_EMAIL=${letsencrypt_email_orig}/LETSENCRYPT_EMAIL=$letsencrypt_email/w $changelog" $production_config
     if [ -s $changelog ] ; then
       echo "Added ${letsencrypt_email} as let's encrypt user"
@@ -431,6 +457,13 @@ update_config() {
   else
     echo "\e[91m[ERROR] You must set an email for let's encrypt! Otherwise we cannot secure your installation....\e[0m"
   fi
+
+  echo "FACEBOOK_CLIENT_ID=" >> splash.vars
+  echo "FACEBOOK_CLIENT_SECRET=" >> splash.vars
+  echo "GOOGLE_CLIENT_ID=" >> splash.vars
+  echo "GOOGLE_CLIENT_SECRET=" >> splash.vars
+  echo "TWITTER_CLIENT_ID=" >> splash.vars
+  echo "TWITTER_CLIENT_SECRET=" >> splash.vars
 
   if [ $DEBUG ] ; then
     docker-compose up --pull --force-recreate

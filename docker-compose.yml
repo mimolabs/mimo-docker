@@ -82,37 +82,36 @@ services:
       - api
     command: bash -c "cd /opt/app && ./wait-for-it.sh && grunt build && node /opt/app/dist/server/app.js"
 
-  #splash:
-  #  restart: always
-  #  image: "ohmimo/mimo-splash"
-  #  #env_file:
-  #  #  # - production.vars
-  #  #  # - dashboard.vars
-  #  environment:
-  #    - NODE_ENV=production
-  #  volumes:
-  #      - shared-volume:/etc/mimo
-  #  depends_on:
-  #    - api
-  #  command: bash -c "cd /opt/app && ./wait-for-it.sh && grunt build && node /opt/app/dist/server/app.js"
+  splash:
+    restart: always
+    image: "ohmimo/mimo-splash"
+    env_file:
+     - splash.vars
+    environment:
+      - NODE_ENV=production
+    volumes:
+        - shared-volume:/etc/mimo
+    depends_on:
+      - api
+    command: bash -c "cd /opt/app && ./wait-for-it.sh && grunt build && node /opt/app/dist/server/app.js"
 
-  # worker:
-  #   restart: always
-  #   image: "ohmimo/mimo-worker"
-  #   env_file:
-  #     - production.vars
-  #   environment:
-  #     # - RAILS_LOG_TO_STDOUT=true
-  #     # - RAILS_SERVE_STATIC_FILES=true
-  #     - REDIS_HOST=redis
-  #   logging:
-  #     driver: syslog
-  #   volumes:
-  #       - shared-volume:/etc/mimo
-  #   depends_on:
-  #     - db
-  #     - redis
-  #   command: bash -c "sidekiq"
+  worker:
+    restart: always
+    image: "ohmimo/mimo-worker"
+    env_file:
+      - production.vars
+    environment:
+      # - RAILS_LOG_TO_STDOUT=true
+      # - RAILS_SERVE_STATIC_FILES=true
+      - REDIS_HOST=redis
+    logging:
+      driver: syslog
+    volumes:
+        - shared-volume:/etc/mimo
+    depends_on:
+      - db
+      - redis
+    command: bash -c "sidekiq"
 
 volumes:
   shared-volume:
