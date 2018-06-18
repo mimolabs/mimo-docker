@@ -171,3 +171,7 @@ The simplest way is to remove all the MIMO images and re-build:
 docker-compose down --rmi all
 ./docker-install.sh
 ```
+
+## License 
+
+See license file
