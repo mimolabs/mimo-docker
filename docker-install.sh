@@ -469,8 +469,7 @@ update_config() {
     docker-compose up --pull --force-recreate
   #   docker-compose pull && docker-compose up --force-recreate -d
   elif [ $FOREGROUND ] ; then
-  #   docker-compose pull && docker-compose up --force-recreate
-    docker-compose up
+    docker-compose down; docker-compose -f docker-compose.yml pull && docker-compose -f docker-compose.yml up
   else
     docker-compose down; docker-compose -f docker-compose.yml pull && docker-compose -f docker-compose.yml up -d
     # --force-recreate
