@@ -78,7 +78,7 @@ services:
 
   splash:
     restart: always
-    image: "ohmimo/mimo-splash"
+    image: "ohmimo/mimo-splash-dev"
     env_file:
      - splash.vars
     environment:
